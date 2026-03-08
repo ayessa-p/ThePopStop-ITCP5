@@ -2,7 +2,8 @@
 @section('title', 'Product Reviews')
 @section('content')
 <h1>Product Reviews (DataTable)</h1>
-<table id="reviews-table" style="width: 100%;">
+<div class="datatable-container">
+<table id="reviews-table" class="table table-striped">
     <thead>
         <tr>
             <th>ID</th>
@@ -15,6 +16,7 @@
         </tr>
     </thead>
 </table>
+</div>
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>

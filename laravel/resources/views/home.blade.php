@@ -3,22 +3,29 @@
 @section('title', 'The Pop Stop - Collectible Figurines')
 
 @section('content')
-<div class="hero" style="text-align: center; padding: 2rem 0;">
+<div class="hero">
     <h1>Welcome to The Pop Stop</h1>
     <p>Your destination for premium collectible figurines</p>
 
-    <form method="GET" action="{{ route('home') }}" style="max-width: 600px; margin: 2rem auto; display: flex; gap: 0.5rem;">
-        <input type="text" name="search" placeholder="Search by name, series, or brand..." value="{{ request('search') }}" style="flex:1; padding: 0.8rem; border: 2px solid var(--primary); border-radius: 8px;">
-        <button type="submit" class="btn btn-primary">Search</button>
+    <form method="GET" action="{{ route('home') }}" class="search-form">
+        <div class="input-group">
+        <input class="search-input" type="text" name="search" placeholder="Search by name, series, or brand..." value="{{ request('search') }}">
+        <select class="search-select" name="search_mode">
+            <option value="like" {{ (request('search_mode','like')==='like')?'selected':'' }}>LIKE</option>
+            <option value="model" {{ (request('search_mode')==='model')?'selected':'' }}>Model</option>
+            <option value="scout" {{ (request('search_mode')==='scout')?'selected':'' }}>Scout</option>
+        </select>
+        <button type="submit" class="btn btn-primary search-button">Search</button>
         @if(request('search'))<a href="{{ route('home') }}" class="btn btn-secondary">Clear</a>@endif
+        </div>
     </form>
 
     <a href="{{ route('products.index') }}" class="btn btn-primary">Shop All Products</a>
 </div>
 
-<div class="brand-section" style="margin: 2rem 0;">
+<div class="brand-section">
     <h2 style="text-align: center; margin-bottom: 2rem; color: var(--dark-brown);">Shop by Brand</h2>
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+    <div class="brand-tags">
         @foreach($brands as $b)
             <a href="{{ route('home', ['brand' => $b]) }}" class="btn {{ request('brand') === $b ? 'btn-primary' : 'btn-secondary' }}">{{ $b }}</a>
         @endforeach
@@ -30,10 +37,10 @@
 <div class="product-grid">
     @forelse($products as $product)
         <div class="product-card">
-            <div style="height: 200px; background: var(--light-beige); display: flex; align-items: center; justify-content: center;">
+            <div class="media">
                 @if($product->image_url)
                     @php $src = preg_match('/^https?:\\/\\//i', $product->image_url) ? $product->image_url : Storage::url($product->image_url); @endphp
-                    <img src="{{ $src }}" alt="{{ $product->name }}" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="{{ $src }}" alt="{{ $product->name }}">
                 @else
                     <span style="font-size: 3rem;">📦</span>
                 @endif
@@ -42,8 +49,11 @@
                 <div style="font-weight: bold;">{{ $product->name }}</div>
                 <div style="color: var(--secondary); font-size: 0.9rem;">{{ $product->series }} - {{ $product->brand }}</div>
                 <div style="font-weight: bold;">₱{{ number_format($product->price, 2) }}</div>
-                <div style="font-size: 0.85rem;">{{ $product->status }}</div>
-                <a href="{{ route('products.show', $product) }}" class="btn btn-secondary" style="width:100%; margin-top: 0.5rem;">View Details</a>
+                @php $statusClass = match($product->status){'In Stock'=>'badge-success','Low Stock'=>'badge-warning','Out of Stock'=>'badge-danger', default=>'badge-secondary'}; @endphp
+                <span class="badge {{ $statusClass }}">{{ $product->status }}</span>
+                <div class="product-actions">
+                    <a href="{{ route('products.show', $product) }}" class="btn btn-secondary btn-block">View Details</a>
+                </div>
             </div>
         </div>
     @empty

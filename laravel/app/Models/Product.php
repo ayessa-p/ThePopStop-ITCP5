@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
 
     protected $fillable = [
         'name',
@@ -32,6 +33,21 @@ class Product extends Model
         'cost_price' => 'decimal:2',
         'stock_quantity' => 'integer',
     ];
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'series' => $this->series,
+            'brand' => $this->brand,
+            'description' => $this->description,
+            'sku' => $this->sku,
+            'character' => $this->character,
+            'category' => $this->category,
+            'type' => $this->type,
+        ];
+    }
 
     public function productPhotos(): HasMany
     {

@@ -11,23 +11,30 @@ class HomeController extends Controller
     {
         $search = $request->get('search', '');
         $brand = $request->get('brand', '');
+        $mode = $request->get('search_mode', 'like'); // like | model | scout
 
         $query = Product::where('status', '!=', 'Out of Stock');
 
         if ($search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('series', 'like', "%{$search}%")
-                    ->orWhere('brand', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
+            if ($mode === 'scout') {
+                $products = Product::search($search)->paginate(8);
+            } else {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('series', 'like', "%{$search}%")
+                        ->orWhere('brand', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            }
         }
 
         if ($brand !== '') {
             $query->where('brand', $brand);
         }
 
-        $products = $query->orderByDesc('created_at')->limit(8)->get();
+        if (! isset($products)) {
+            $products = $query->orderByDesc('created_at')->limit(8)->get();
+        }
         $brands = Product::select('brand')->distinct()->orderBy('brand')->pluck('brand');
 
         $cartCount = 0;
@@ -35,6 +42,6 @@ class HomeController extends Controller
             $cartCount = auth()->user()->cartItems()->sum('quantity');
         }
 
-        return view('home', compact('products', 'brands', 'search', 'brand', 'cartCount'));
+        return view('home', compact('products', 'brands', 'search', 'brand', 'cartCount', 'mode'));
     }
 }

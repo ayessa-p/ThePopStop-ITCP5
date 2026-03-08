@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -19,7 +20,24 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $query = User::withCount('orders')->orderByDesc('created_at');
+        if ($request->ajax()) {
+            $query = User::query()->withCount('orders');
+            return DataTables::eloquent($query)
+                ->addColumn('actions', function (User $u) {
+                    $buttons = '<a href="' . route('admin.users.edit', $u) . '" class="btn btn-sm btn-secondary">Edit</a> ';
+                    $buttons .= '<form action="' . route('admin.users.toggle-active', $u) . '" method="POST" style="display:inline;">' .
+                        csrf_field() .
+                        '<button type="submit" class="btn btn-sm btn-secondary">' . ($u->is_active ? 'Deactivate' : 'Activate') . '</button></form> ';
+                    if ($u->id !== auth()->id()) {
+                        $buttons .= '<form action="' . route('admin.users.destroy', $u) . '" method="POST" style="display:inline;">' .
+                            csrf_field() . method_field('DELETE') .
+                            '<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Delete?\')">Delete</button></form>';
+                    }
+                    return $buttons;
+                })
+                ->rawColumns(['actions'])
+                ->toJson();
+        }
 
         if ($request->filled('role')) {
             $query->where('role', $request->role);
@@ -34,6 +52,18 @@ class UserController extends Controller
             });
         }
 
+        $query = User::withCount('orders')->orderByDesc('created_at');
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('username', 'like', "%{$s}%")
+                    ->orWhere('email', 'like', "%{$s}%")
+                    ->orWhere('full_name', 'like', "%{$s}%");
+            });
+        }
         $users = $query->paginate(15);
 
         return view('admin.users.index', compact('users'));

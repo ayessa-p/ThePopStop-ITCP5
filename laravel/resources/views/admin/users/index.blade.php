@@ -3,40 +3,43 @@
 @section('content')
 <h1>Manage Users</h1>
 <p><a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add User</a></p>
-<form method="GET" style="margin-bottom: 1rem;">
-    <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}">
-    <select name="role"><option value="">All</option><option value="customer" {{ request('role')=='customer'?'selected':'' }}>Customer</option><option value="admin" {{ request('role')=='admin'?'selected':'' }}>Admin</option></select>
-    <button type="submit" class="btn btn-secondary">Filter</button>
-</form>
-<table style="width: 100%; border-collapse: collapse;">
+<div class="datatable-container">
+<table id="users-table" class="table table-striped">
     <thead>
-        <tr style="background: var(--primary); color: white;">
-            <th style="padding: 0.5rem;">ID</th>
-            <th style="padding: 0.5rem;">Username</th>
-            <th style="padding: 0.5rem;">Email</th>
-            <th style="padding: 0.5rem;">Role</th>
-            <th style="padding: 0.5rem;">Active</th>
-            <th style="padding: 0.5rem;">Orders</th>
-            <th style="padding: 0.5rem;">Actions</th>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Active</th>
+            <th>Orders</th>
+            <th>Actions</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach($users as $u)
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 0.5rem;">{{ $u->id }}</td>
-                <td style="padding: 0.5rem;">{{ $u->username }}</td>
-                <td style="padding: 0.5rem;">{{ $u->email }}</td>
-                <td style="padding: 0.5rem;">{{ $u->role }}</td>
-                <td style="padding: 0.5rem;">{{ $u->is_active ? 'Yes' : 'No' }}</td>
-                <td style="padding: 0.5rem;">{{ $u->orders_count ?? 0 }}</td>
-                <td style="padding: 0.5rem;">
-                    <a href="{{ route('admin.users.edit', $u) }}" class="btn btn-secondary btn-sm">Edit</a>
-                    <form action="{{ route('admin.users.toggle-active', $u) }}" method="POST" style="display:inline;">@csrf<button type="submit" class="btn btn-secondary btn-sm">{{ $u->is_active ? 'Deactivate' : 'Activate' }}</button></form>
-                    @if($u->id !== auth()->id())<form action="{{ route('admin.users.destroy', $u) }}" method="POST" style="display:inline;">@csrf @method('DELETE')<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">Delete</button></form>@endif
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
 </table>
-{{ $users->withQueryString()->links() }}
+</div>
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script>
+$(function() {
+    $('#users-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route("admin.users.index") }}',
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'username', name: 'username' },
+            { data: 'email', name: 'email' },
+            { data: 'role', name: 'role' },
+            { data: 'is_active', name: 'is_active' },
+            { data: 'orders_count', name: 'orders_count' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+        ]
+    });
+});
+</script>
+@endpush
 @endsection

@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
 {
@@ -22,6 +23,25 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $query = Product::withTrashed();
+            return DataTables::eloquent($query)
+                ->addColumn('actions', function (Product $p) {
+                    if ($p->trashed()) {
+                        return '<form action="' . route('admin.products.restore', $p->id) . '" method="POST" class="d-inline">' .
+                            csrf_field() .
+                            '<button type="submit" class="btn btn-sm btn-secondary">Restore</button></form>';
+                    }
+                    return '<a href="' . route('admin.products.edit', $p) . '" class="btn btn-sm btn-secondary">Edit</a> ' .
+                        '<a href="' . route('admin.products.photos.index', $p) . '" class="btn btn-sm btn-secondary">Photos</a> ' .
+                        '<form action="' . route('admin.products.destroy', $p) . '" method="POST" class="d-inline">' .
+                        csrf_field() . method_field('DELETE') .
+                        '<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Delete?\')">Delete</button></form>';
+                })
+                ->rawColumns(['actions'])
+                ->toJson();
+        }
+
         $query = Product::withTrashed()->orderByDesc('created_at');
 
         if ($request->filled('search')) {
