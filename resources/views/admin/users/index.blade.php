@@ -27,7 +27,7 @@
     .admin-table th:last-child { border-top-right-radius: 12px; }
     .admin-table td { padding: 1rem 0.5rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.85rem; vertical-align: middle; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis; }
     .admin-table tr:hover td { background-color: #fafafa; }
-    
+
     /* Column widths adjusted to fit container */
     .col-email { width: 25%; }
     .col-fullname { width: 20%; }
@@ -42,11 +42,11 @@
     .dataTables_wrapper .bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
     .dataTables_length select { padding: 0.3rem 2rem 0.3rem 0.5rem !important; }
     .dataTables_filter { display: none; } /* We use our own search bar */
-    
+
     .badge { padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem; }
     .badge-success { background: #d1fae5; color: #065f46; }
     .badge-danger { background: #fee2e2; color: #991b1b; }
-    
+
     .action-stack { display: flex; flex-direction: column; gap: 0.4rem; align-items: center; }
     .btn-action { display: block; width: 90px; padding: 0.4rem; border-radius: 50px; text-align: center; text-decoration: none; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; }
     .btn-action.view { background: var(--secondary); color: white; }
@@ -59,19 +59,7 @@
 
 @section('content')
 <div class="admin-container">
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link"><span>📊</span> Dashboard</a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link"><span>📦</span> Products</a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link"><span>🛒</span> Orders</a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link active"><span>👥</span> Users</a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link"><span>🏭</span> Suppliers</a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link"><span>📋</span> Purchase Orders</a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link"><span>🎟️</span> Discounts</a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link"><span>📈</span> Reports</a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <main class="admin-main">
         <header class="admin-header">

@@ -26,7 +26,7 @@
     .admin-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
     .admin-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
     .admin-table tr:hover td { background-color: #fafafa; }
-    
+
     .col-id { width: 5%; }
     .col-customer { width: 15%; }
     .col-email { width: 20%; }
@@ -55,31 +55,16 @@
 
 @section('content')
 <div class="admin-container">
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link"><span>📊</span> Dashboard</a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link"><span>📦</span> Products</a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link active"><span>🛒</span> Orders</a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link"><span>👥</span> Users</a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link"><span>🏭</span> Suppliers</a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link"><span>📋</span> Purchase Orders</a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link"><span>🎟️</span> Discounts</a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link"><span>📈</span> Reports</a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <main class="admin-main">
         <header class="admin-header"><h1>Manage Orders</h1></header>
         <div class="orders-section">
             <div class="status-filters">
                 <a href="{{ route('admin.orders.index') }}" class="status-filter {{ !request('status') ? 'active' : '' }}">All Orders ({{ array_sum($statusCounts) }})</a>
-                @php
-                    $icons = ['Pending' => '📝', 'Processing' => '⚙️', 'Shipped' => '🚚', 'Delivered' => '✅', 'Cancelled' => '❌'];
-                @endphp
                 @foreach($statusCounts as $status => $count)
                     <a href="{{ route('admin.orders.index', ['status' => $status]) }}" class="status-filter {{ request('status') == $status ? 'active' : '' }}">
-                        <span>{{ $icons[$status] ?? '' }}</span> {{ $status }} ({{ $count }})
+                        {{ $status }} ({{ $count }})
                     </a>
                 @endforeach
             </div>

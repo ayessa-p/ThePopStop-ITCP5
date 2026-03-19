@@ -247,36 +247,7 @@
 
 @section('content')
 <div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
-                <span>📊</span> Dashboard
-            </a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link active">
-                <span>📦</span> Products
-            </a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link">
-                <span>🛒</span> Orders
-            </a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link">
-                <span>👥</span> Users
-            </a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link">
-                <span>🏭</span> Suppliers
-            </a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link">
-                <span>📋</span> Purchase Orders
-            </a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link">
-                <span>🎟️</span> Discounts
-            </a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link">
-                <span>📈</span> Reports
-            </a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <!-- Main Content -->
     <main class="admin-main">
@@ -284,7 +255,7 @@
             <h1>Manage Products</h1>
             <div style="display: flex; gap: 1rem;">
                 <a href="{{ route('admin.products.import-form') }}" class="btn-import">
-                    <span>📥</span> Import from Excel
+                    Import from Excel
                 </a>
                 <a href="{{ route('admin.products.create') }}" class="btn-add">
                     + Add New Product
@@ -333,8 +304,8 @@ $(function() {
             { data: 'price', name: 'price' },
             { data: 'cost_price', name: 'cost_price' },
             { data: 'stock_quantity', name: 'stock_quantity' },
-            { 
-                data: 'status', 
+            {
+                data: 'status',
                 name: 'status',
                 render: function(data) {
                     let cls = 'status-instock';

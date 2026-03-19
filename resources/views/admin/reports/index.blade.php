@@ -16,12 +16,12 @@
 
     .report-card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 2rem; }
     .report-card h3 { color: var(--dark-brown); font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
-    
+
     .filter-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; align-items: end; }
     .form-group { margin-bottom: 0; }
     .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; font-size: 0.85rem; }
     .form-control { width: 100%; padding: 0.6rem 1rem; border: 2px solid #F3F1EA; border-radius: 10px; background: #fafafa; font-size: 0.9rem; }
-    
+
     .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
     .chart-container { background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); height: 400px; overflow: hidden; position: relative; }
     .chart-full { grid-column: span 2; height: 450px; }
@@ -32,9 +32,9 @@
     .admin-table th:last-child { border-top-right-radius: 12px; }
     .admin-table td { padding: 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; }
     .total-row { background: #fafafa; font-weight: 700; }
-    
+
     .btn-print { background: #a89078; color: white; padding: 0.5rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border: none; cursor: pointer; }
-    
+
     @media print {
         .admin-sidebar, .filter-card, .btn-print, .admin-header { display: none !important; }
         .admin-container { display: block; padding: 0; }
@@ -45,19 +45,7 @@
 
 @section('content')
 <div class="admin-container">
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link"><span>📊</span> Dashboard</a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link"><span>📦</span> Products</a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link"><span>🛒</span> Orders</a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link"><span>👥</span> Users</a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link"><span>🏭</span> Suppliers</a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link"><span>📋</span> Purchase Orders</a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link"><span>🎟️</span> Discounts</a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link active"><span>📈</span> Reports</a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <main class="admin-main">
         <h1 class="admin-header">Reports</h1>

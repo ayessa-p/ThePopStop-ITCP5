@@ -12,22 +12,22 @@
     .sidebar-link:hover { background: var(--bg); color: var(--primary); }
     .sidebar-link.active { background: var(--primary); color: white; }
     .admin-main { flex: 1; min-width: 0; }
-    
+
     .info-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 2rem; }
     .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem; }
     .info-item label { display: block; color: #999; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
     .info-item span { display: block; color: var(--dark-brown); font-size: 1.1rem; font-weight: 700; }
 
     .status-badge { padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.9rem; background: #f3f1ea; color: #a89078; }
-    
+
     .admin-table-wrapper { width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid #eee; }
     .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; }
     .admin-table th { background: #f8f9fa; color: #666; text-align: left; padding: 1rem; font-weight: 600; font-size: 0.85rem; border-bottom: 1px solid #eee; }
     .admin-table td { padding: 1rem; border-bottom: 1px solid #eee; color: #444; font-size: 0.9rem; }
     .admin-table tr:last-child td { border-bottom: none; }
-    
+
     .total-row { background: #fafafa; font-weight: 800; font-size: 1.1rem; color: var(--primary); }
-    
+
     .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: #666; text-decoration: none; font-weight: 600; margin-bottom: 1.5rem; transition: color 0.2s; }
     .back-link:hover { color: var(--primary); }
 
@@ -40,23 +40,11 @@
 
 @section('content')
 <div class="admin-container">
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link"><span>📊</span> Dashboard</a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link"><span>📦</span> Products</a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link"><span>🛒</span> Orders</a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link"><span>👥</span> Users</a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link"><span>🏭</span> Suppliers</a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link active"><span>📋</span> Purchase Orders</a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link"><span>🎟️</span> Discounts</a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link"><span>📈</span> Reports</a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <main class="admin-main">
         <a href="{{ route('admin.purchase-orders.index') }}" class="back-link">← Back to Purchase Orders</a>
-        
+
         <div class="info-card">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem;">
                 <div>
@@ -125,7 +113,7 @@
                     <button type="submit" class="btn-action btn-primary-action" onclick="return confirm('Marking as Received will update your product inventory. Continue?')">Mark as Received</button>
                 </form>
                 @endif
-                
+
                 <form method="POST" action="{{ route('admin.purchase-orders.update-status', $purchaseOrder) }}" style="display: flex; gap: 0.5rem;">
                     @csrf
                     @method('PUT')

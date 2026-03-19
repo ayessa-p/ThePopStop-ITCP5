@@ -171,36 +171,7 @@
 
 @section('content')
 <div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link active">
-                <span>📊</span> Dashboard
-            </a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link">
-                <span>📦</span> Products
-            </a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link">
-                <span>🛒</span> Orders
-            </a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link">
-                <span>👥</span> Users
-            </a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link">
-                <span>🏭</span> Suppliers
-            </a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link">
-                <span>📋</span> Purchase Orders
-            </a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link">
-                <span>🎟️</span> Discounts
-            </a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link">
-                <span>📈</span> Reports
-            </a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <!-- Main Content -->
     <main class="admin-main">
@@ -262,7 +233,7 @@
         <!-- Low Stock Alert -->
         <div class="dashboard-section">
             <div class="section-header">
-                <span>⚠️</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                 <h2>Low Stock Alert</h2>
             </div>
             <table class="admin-table">

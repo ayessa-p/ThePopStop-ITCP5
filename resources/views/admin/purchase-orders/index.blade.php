@@ -27,7 +27,7 @@
     .admin-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
     .admin-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
     .admin-table tr:hover td { background-color: #fafafa; }
-    
+
     .col-id { width: 80px; }
     .col-supplier { width: 20%; }
     .col-date { width: 15%; }
@@ -57,19 +57,7 @@
 
 @section('content')
 <div class="admin-container">
-    <aside class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link"><span>📊</span> Dashboard</a>
-            <a href="{{ route('admin.products.index') }}" class="sidebar-link"><span>📦</span> Products</a>
-            <a href="{{ route('admin.orders.index') }}" class="sidebar-link"><span>🛒</span> Orders</a>
-            <a href="{{ route('admin.users.index') }}" class="sidebar-link"><span>👥</span> Users</a>
-            <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link"><span>🏭</span> Suppliers</a>
-            <a href="{{ route('admin.purchase-orders.index') }}" class="sidebar-link active"><span>📋</span> Purchase Orders</a>
-            <a href="{{ route('admin.discounts.index') }}" class="sidebar-link"><span>🎟️</span> Discounts</a>
-            <a href="{{ route('admin.reports.index') }}" class="sidebar-link"><span>📈</span> Reports</a>
-        </nav>
-    </aside>
+    @include('admin.partials.sidebar')
 
     <main class="admin-main">
         <header class="admin-header">
@@ -142,7 +130,7 @@
         const modal = document.getElementById('statusModal');
         const form = document.getElementById('statusForm');
         const select = document.getElementById('poStatus');
-        
+
         form.action = `/admin/purchase-orders/${id}/status`;
         select.value = currentStatus;
         modal.style.display = 'flex';
