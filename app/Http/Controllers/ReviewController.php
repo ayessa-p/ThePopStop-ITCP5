@@ -20,20 +20,26 @@ class ReviewController extends Controller
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'review_text' => 'nullable|string|max:2000',
+            'order_id' => 'nullable|exists:orders,id',
         ]);
 
         if (! $this->canReview(auth()->id(), $product->id)) {
             return back()->with('error', 'You can only review products you have purchased and received.');
         }
 
-        if ($product->reviews()->where('user_id', auth()->id())->exists()) {
-            return back()->with('error', 'You have already reviewed this product.');
+        $orderId = $request->order_id;
+        
+        if (!$orderId) {
+            $orderId = Order::where('user_id', auth()->id())
+                ->where('status', 'Delivered')
+                ->whereHas('orderItems', fn ($q) => $q->where('product_id', $product->id))
+                ->latest()
+                ->value('id');
         }
 
-        $orderId = Order::where('user_id', auth()->id())
-            ->where('status', 'Delivered')
-            ->whereHas('orderItems', fn ($q) => $q->where('product_id', $product->id))
-            ->value('id');
+        if ($product->reviews()->where('user_id', auth()->id())->where('order_id', $orderId)->exists()) {
+            return back()->with('error', 'You have already reviewed this product for this order.');
+        }
 
         $validated['review_text'] = $this->filterBadWords($validated['review_text'] ?? '');
 

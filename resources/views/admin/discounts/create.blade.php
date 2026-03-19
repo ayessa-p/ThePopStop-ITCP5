@@ -1,30 +1,8 @@
 @extends('layouts.app')
-
 @section('title', 'Add Discount - Admin')
 
 @push('styles')
-<style>
-    .admin-container { display: flex; gap: 2rem; padding: 2rem 0; }
-    .admin-sidebar { width: 280px; background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); height: fit-content; }
-    .admin-sidebar h2 { color: var(--primary); font-size: 1.25rem; margin-bottom: 2rem; font-weight: 700; }
-    .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; }
-    .sidebar-link { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; text-decoration: none; color: #666; border-radius: 12px; transition: all 0.2s; font-weight: 500; }
-    .sidebar-link:hover { background: var(--bg); color: var(--primary); }
-    .sidebar-link.active { background: var(--primary); color: white; }
-    .admin-main { flex: 1; min-width: 0; }
-
-    .form-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto; }
-    .form-group { margin-bottom: 1.5rem; }
-    .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; font-size: 0.9rem; }
-    .form-control { width: 100%; padding: 0.75rem 1rem; border: 2px solid #F3F1EA; border-radius: 10px; background: #fafafa; transition: all 0.2s; }
-    .form-control:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 4px rgba(139,0,0,0.05); }
-
-    .btn-submit { background: #a89078; color: white; padding: 0.8rem 2rem; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; font-size: 1rem; margin-top: 1rem; }
-    .btn-submit:hover { background: #967d63; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(168,144,120,0.3); }
-
-    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: #666; text-decoration: none; font-weight: 600; margin-bottom: 1.5rem; transition: color 0.2s; }
-    .back-link:hover { color: var(--primary); }
-</style>
+    @include('admin.partials.form-styles')
 @endpush
 
 @section('content')
@@ -32,63 +10,172 @@
     @include('admin.partials.sidebar')
 
     <main class="admin-main">
-        <a href="{{ route('admin.discounts.index') }}" class="back-link">← Back to Discounts</a>
 
-        <div class="form-card">
-            <header style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-                <h1 style="font-size: 1.5rem; color: var(--dark-brown); font-weight: 700; margin: 0;">Add New Discount</h1>
-            </header>
+        <a href="{{ route('admin.discounts.index') }}" class="af-back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Discounts
+        </a>
 
-            <form method="POST" action="{{ route('admin.discounts.store') }}">
-                @csrf
-
-                <div class="form-group">
-                    <label class="form-label">Code *</label>
-                    <input type="text" name="code" value="{{ old('code') }}" class="form-control" required placeholder="WELCOME10">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <input type="text" name="description" value="{{ old('description') }}" class="form-control" placeholder="10% off for new customers">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Discount Type *</label>
-                    <select name="discount_type" class="form-control" required>
-                        <option value="Percentage">Percentage</option>
-                        <option value="Fixed">Fixed</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Discount Value *</label>
-                    <input type="number" name="discount_value" step="0.01" value="{{ old('discount_value') }}" class="form-control" required placeholder="10.00">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Minimum Purchase</label>
-                    <input type="number" name="min_purchase" step="0.01" value="{{ old('min_purchase', 0) }}" class="form-control" required placeholder="50.00">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Start Date</label>
-                    <input type="date" name="start_date" value="{{ old('start_date') }}" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">End Date</label>
-                    <input type="date" name="end_date" value="{{ old('end_date') }}" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                        <input type="checkbox" name="is_active" value="1" checked> Active
-                    </label>
-                </div>
-
-                <button type="submit" class="btn-submit">Create Discount</button>
-            </form>
+        <div class="af-page-header">
+            <h1>Add New Discount</h1>
+            <p>Create a promo code that customers can apply at checkout.</p>
         </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('admin.discounts.store') }}">
+            @csrf
+
+            {{-- ── Discount Details ── --}}
+            <div class="af-card">
+                <div class="af-card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    Discount Details
+                </div>
+
+                <div class="af-grid-2">
+                    <div class="af-field">
+                        <label class="af-label">Promo Code <span class="af-required">*</span></label>
+                        <input type="text" name="code" class="af-input" value="{{ old('code') }}" required
+                            placeholder="e.g. WELCOME10"
+                            style="text-transform:uppercase;font-weight:700;letter-spacing:.5px;"
+                            oninput="this.value=this.value.toUpperCase()">
+                        @error('code')<div class="af-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="af-field">
+                        <label class="af-label">Description</label>
+                        <input type="text" name="description" class="af-input" value="{{ old('description') }}"
+                            placeholder="e.g. 10% off for new customers">
+                    </div>
+
+                    <div class="af-field">
+                        <label class="af-label">Discount Type <span class="af-required">*</span></label>
+                        <select name="discount_type" class="af-select" required id="discount-type-select" onchange="updateValueHint()">
+                            <option value="percentage" {{ old('discount_type') === 'percentage' ? 'selected' : '' }}>Percentage (%)</option>
+                            <option value="fixed"      {{ old('discount_type') === 'fixed'      ? 'selected' : '' }}>Fixed Amount (&#8369;)</option>
+                        </select>
+                        @error('discount_type')<div class="af-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="af-field">
+                        <label class="af-label">Discount Value <span class="af-required">*</span></label>
+                        <div class="af-prefix-wrap">
+                            <span class="af-prefix" id="value-prefix">%</span>
+                            <input type="number" name="discount_value" class="af-input" step="0.01" min="0"
+                                value="{{ old('discount_value') }}" required placeholder="10.00">
+                        </div>
+                        <div class="af-hint" id="value-hint">Enter the percentage to deduct (e.g. 10 = 10% off).</div>
+                        @error('discount_value')<div class="af-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="af-field af-span-2">
+                        <label class="af-label">Minimum Purchase Amount</label>
+                        <div class="af-prefix-wrap">
+                            <span class="af-prefix">&#8369;</span>
+                            <input type="number" name="min_purchase" class="af-input" step="0.01" min="0"
+                                value="{{ old('min_purchase', 0) }}" placeholder="0.00">
+                        </div>
+                        <div class="af-hint">Leave at 0 for no minimum order requirement.</div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── Validity Period ── --}}
+            <div class="af-card">
+                <div class="af-card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Validity Period
+                </div>
+
+                <div class="af-grid-2">
+                    <div class="af-field">
+                        <label class="af-label">Start Date</label>
+                        <input type="date" name="start_date" class="af-input" value="{{ old('start_date') }}">
+                        <div class="af-hint">Leave blank to activate immediately.</div>
+                    </div>
+
+                    <div class="af-field">
+                        <label class="af-label">End Date</label>
+                        <input type="date" name="end_date" class="af-input" value="{{ old('end_date') }}">
+                        <div class="af-hint">Leave blank for no expiry.</div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── Settings ── --}}
+            <div class="af-card">
+                <div class="af-card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Settings
+                </div>
+
+                <label class="af-toggle-row" for="is_active_toggle">
+                    <div class="af-toggle-info">
+                        <span class="af-toggle-title">Active</span>
+                        <span class="af-toggle-sub">Customers can use this code when it is active.</span>
+                    </div>
+                    <label class="af-switch">
+                        <input type="checkbox" name="is_active" id="is_active_toggle" value="1" checked>
+                        <span class="af-switch-track"></span>
+                    </label>
+                </label>
+            </div>
+
+            {{-- ── Actions ── --}}
+            <div class="af-btn-row">
+                <button type="submit" class="af-btn-submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Create Discount
+                </button>
+                <a href="{{ route('admin.discounts.index') }}" class="af-btn-cancel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Cancel
+                </a>
+            </div>
+
+        </form>
     </main>
 </div>
+
+@push('scripts')
+<script>
+    function updateValueHint() {
+        const type   = document.getElementById('discount-type-select').value;
+        const prefix = document.getElementById('value-prefix');
+        const hint   = document.getElementById('value-hint');
+        if (type === 'percentage') {
+            prefix.textContent = '%';
+            hint.textContent   = 'Enter the percentage to deduct (e.g. 10 = 10% off).';
+        } else {
+            prefix.textContent = '₱';
+            hint.textContent   = 'Enter the fixed peso amount to deduct from the order total.';
+        }
+    }
+    // Run on page load in case of old() value
+    updateValueHint();
+</script>
+@endpush
+
 @endsection

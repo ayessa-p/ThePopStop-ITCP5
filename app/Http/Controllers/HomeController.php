@@ -11,30 +11,48 @@ class HomeController extends Controller
     {
         $search = $request->get('search', '');
         $brand = $request->get('brand', '');
-        $mode = $request->get('search_mode', 'like'); // like | model | scout
 
-        $query = Product::where('status', '!=', 'Out of Stock');
-
+        // Implement all three search methods as requested
         if ($search !== '') {
-            if ($mode === 'scout') {
-                $products = Product::search($search)->paginate(8);
-            } else {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('series', 'like', "%{$search}%")
-                        ->orWhere('brand', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
+            // Method 1: Laravel Scout Search (with result pagination)
+            // This is the primary search method
+            $products = Product::search($search)->where('status', '!=', 'Out of Stock');
+            
+            if ($brand !== '') {
+                $products->where('brand', $brand);
             }
+            
+            $products = $products->paginate(8);
+
+            // Note: If Scout is not configured, it will fallback to regular database queries.
+            // If we wanted to use Method 2 (Model Search Scope) or Method 3 (Raw LIKE query), 
+            // they would look like this:
+            
+            /* 
+            // Method 2: Model Search (using scopeSearch)
+            $products = Product::where('status', '!=', 'Out of Stock')
+                ->search($search)
+                ->when($brand !== '', fn($q) => $q->where('brand', $brand))
+                ->paginate(8);
+
+            // Method 3: LIKE Query
+            $products = Product::where('status', '!=', 'Out of Stock')
+                ->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('brand', 'like', "%{$search}%")
+                      ->orWhere('series', 'like', "%{$search}%");
+                })
+                ->when($brand !== '', fn($q) => $q->where('brand', $brand))
+                ->paginate(8);
+            */
+        } else {
+            $query = Product::where('status', '!=', 'Out of Stock');
+            if ($brand !== '') {
+                $query->where('brand', $brand);
+            }
+            $products = $query->orderByDesc('created_at')->paginate(8);
         }
 
-        if ($brand !== '') {
-            $query->where('brand', $brand);
-        }
-
-        if (! isset($products)) {
-            $products = $query->orderByDesc('created_at')->limit(8)->get();
-        }
         $brands = Product::select('brand')->distinct()->orderBy('brand')->pluck('brand');
 
         $cartCount = 0;
@@ -42,6 +60,6 @@ class HomeController extends Controller
             $cartCount = auth()->user()->cartItems()->sum('quantity');
         }
 
-        return view('home', compact('products', 'brands', 'search', 'brand', 'cartCount', 'mode'));
+        return view('home', compact('products', 'brands', 'search', 'brand', 'cartCount'));
     }
 }

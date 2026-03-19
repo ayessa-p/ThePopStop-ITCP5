@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Mail\PurchaseOrderStatusUpdated;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PurchaseOrderController extends Controller
 {
@@ -76,6 +78,12 @@ class PurchaseOrderController extends Controller
         return view('admin.purchase-orders.show', compact('purchaseOrder'));
     }
 
+    public function receipt(PurchaseOrder $purchaseOrder)
+    {
+        $pdf = \PDF::loadView('admin.purchase-orders.receipt', compact('purchaseOrder'));
+        return $pdf->stream('purchase-order-' . $purchaseOrder->id . '.pdf');
+    }
+
     public function updateStatus(Request $request, PurchaseOrder $purchaseOrder)
     {
         $request->validate([
@@ -92,6 +100,14 @@ class PurchaseOrderController extends Controller
             }
         }
 
-        return back()->with('success', 'Status updated.');
+        Mail::to($purchaseOrder->supplier->email)->send(new PurchaseOrderStatusUpdated($purchaseOrder));
+
+        return redirect()->route('admin.purchase-orders.index')->with('success', 'Purchase order status updated.');
+    }
+
+    public function destroy(PurchaseOrder $purchaseOrder)
+    {
+        $purchaseOrder->delete();
+        return redirect()->route('admin.purchase-orders.index')->with('success', 'Purchase order deleted.');
     }
 }

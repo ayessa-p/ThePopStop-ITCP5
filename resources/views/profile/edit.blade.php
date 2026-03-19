@@ -16,72 +16,75 @@
     }
     .profile-layout {
         display: grid;
-        grid-template-columns: 260px 1fr;
-        gap: 1.75rem;
+        grid-template-columns: 280px 1fr;
+        gap: 2rem;
         align-items: start;
     }
-    .profile-sidebar-card {
+    .pro-card-avatar {
         background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 2px 16px rgba(0,0,0,.06);
-        padding: 2rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,.05);
+        padding: 2.5rem 1.5rem;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         position: sticky;
-        top: 90px;
+        top: 100px;
     }
-    .profile-avatar-wrap {
-        position: relative;
-        width: 96px;
-        height: 96px;
-        margin: 0 auto 1rem;
-    }
-    .profile-avatar {
-        width: 96px;
-        height: 96px;
+    .pro-avatar-circle {
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #f0ede6;
+        overflow: hidden;
+        margin-bottom: 1.25rem;
+        border: 5px solid #F3F1EA;
+        box-shadow: 0 4px 15px rgba(0,0,0,.1);
         background: var(--light-beige);
-    }
-    .profile-avatar-placeholder {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--accent), var(--primary));
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto;
+        flex-shrink: 0;
     }
-    .profile-avatar-placeholder svg { color: #fff; }
-    .profile-username {
-        font-size: 1.1rem;
-        font-weight: 700;
+    .pro-avatar-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .pro-avatar-name {
+        font-size: 1.4rem;
+        font-weight: 800;
         color: var(--dark-brown);
-        margin-bottom: .25rem;
+        margin: 0 0 .25rem 0;
     }
-    .profile-email-text {
-        font-size: .8rem;
-        color: #aaa;
-        margin-bottom: 1.25rem;
+    .pro-avatar-email {
+        font-size: .85rem;
+        color: #999;
+        margin-bottom: 1.75rem;
         word-break: break-all;
     }
-    .profile-photo-upload {
-        display: block;
-        width: 100%;
-        padding: .6rem;
-        background: #f5f2eb;
-        border: 2px dashed #ddd;
-        border-radius: 10px;
-        cursor: pointer;
+    .pro-avatar-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        padding: .7rem 1.25rem;
+        background: #F3F1EA;
+        border: 1px solid #E8E4DC;
+        border-radius: 50px;
         font-size: .8rem;
-        color: #888;
-        text-align: center;
-        transition: border-color .2s, color .2s;
+        font-weight: 700;
+        color: #666;
+        cursor: pointer;
+        transition: all .2s;
+        width: 100%;
     }
-    .profile-photo-upload:hover {
+    .pro-avatar-btn:hover {
+        background: var(--primary);
+        color: #fff;
         border-color: var(--primary);
-        color: var(--primary);
+        transform: translateY(-1px);
     }
     #profile_photo { display: none; }
 
@@ -218,29 +221,22 @@
 
     <div class="profile-layout">
 
-        {{-- ===== LEFT: Avatar sidebar ===== --}}
-        <div class="profile-sidebar-card">
-            @if($user->profile_photo_url ?? null)
-                <img src="{{ $user->profile_photo_url }}" alt="Profile photo" class="profile-avatar" id="avatar-preview">
-            @else
-                <div class="profile-avatar-placeholder" id="avatar-placeholder">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
-                </div>
-                <img src="" alt="" class="profile-avatar" id="avatar-preview" style="display:none;">
-            @endif
-
-            <div class="profile-username" style="margin-top:1rem;">{{ $user->username }}</div>
-            <div class="profile-email-text">{{ $user->email }}</div>
-
-            <label class="profile-photo-upload" for="profile_photo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:.3rem;">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        {{-- ===== LEFT: Avatar card ===== --}}
+        <div class="pro-card pro-card-avatar">
+            <div class="pro-avatar-circle">
+                <img src="{{ $user->profile_photo_url }}" alt="{{ $user->username }}" id="avatar-preview">
+            </div>
+            <h2 class="pro-avatar-name">{{ $user->username }}</h2>
+            <div class="pro-avatar-email">{{ $user->email }}</div>
+            
+            <label for="profile_photo" class="pro-avatar-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
                 Change Photo
             </label>
-            <input type="file" name="profile_photo" id="profile_photo" accept="image/*">
+            <input type="file" name="profile_photo" id="profile_photo" accept="image/*" style="display:none;" onchange="previewImage(this)">
         </div>
 
         {{-- ===== RIGHT: Form cards ===== --}}
@@ -350,30 +346,27 @@
 
 @push('scripts')
 <script>
-    // Toggle password visibility
-    function togglePw(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const isText = input.type === 'text';
-        input.type = isText ? 'password' : 'text';
-        btn.style.color = isText ? '' : 'var(--primary)';
+    function togglePw(id, btn) {
+        const input = document.getElementById(id);
+        const icon = btn.querySelector('svg');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />';
+        } else {
+            input.type = 'password';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+        }
     }
 
-    // Avatar preview on file select
-    document.getElementById('profile_photo').addEventListener('change', function () {
-        const file = this.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const preview = document.getElementById('avatar-preview');
-            const placeholder = document.getElementById('avatar-placeholder');
-            if (preview) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatar-preview').src = e.target.result;
             }
-            if (placeholder) placeholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    });
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 @endpush
 

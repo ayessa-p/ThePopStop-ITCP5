@@ -99,6 +99,18 @@ class Product extends Model
     }
 
     /**
+     * Scope a query to search products by name, series, or brand.
+     * This is the "Model Search" implementation.
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('series', 'like', "%{$search}%")
+            ->orWhere('brand', 'like', "%{$search}%")
+            ->orWhere('description', 'like', "%{$search}%");
+    }
+
+    /**
      * Update product status based on stock_quantity.
      */
     public function updateStatus(): void

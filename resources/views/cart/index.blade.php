@@ -299,6 +299,37 @@
         margin-bottom: 1.75rem;
     }
 
+    .btn-browse {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.9rem 2.2rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(139,0,0,0.15);
+    }
+    .btn-browse:hover {
+        background: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(139,0,0,0.2);
+        color: #fff;
+    }
+    .btn-browse svg {
+        flex-shrink: 0;
+        width: 1.1em;
+        height: 1.1em;
+        display: block;
+        margin-top: 1px;
+    }
+
     @media (max-width: 820px) {
         .cart-layout { grid-template-columns: 1fr; }
         .summary-sticky { position: static; }
@@ -324,11 +355,8 @@
         </svg>
         <h3>Your cart is empty</h3>
         <p>Looks like you haven't added any items yet.</p>
-        <a href="{{ route('products.index') }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 2rem;border-radius:10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-            </svg>
-            Browse Products
+        <a href="{{ route('products.index') }}" class="btn-browse">
+            <span>Browse Products</span>
         </a>
     </div>
 @else

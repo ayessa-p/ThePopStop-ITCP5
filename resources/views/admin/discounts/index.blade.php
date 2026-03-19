@@ -19,23 +19,23 @@
     .btn-add:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139,0,0,0.2); }
 
     .admin-table-wrapper { width: 100%; overflow: hidden; margin-top: 1rem; border-radius: 12px; }
-    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; table-layout: fixed; }
+    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; }
     .admin-table th { background: var(--accent); color: white; text-align: left; padding: 1rem; font-weight: 600; font-size: 0.9rem; border-bottom: none; }
     .admin-table th:first-child { border-top-left-radius: 12px; }
     .admin-table th:last-child { border-top-right-radius: 12px; }
-    .admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; vertical-align: middle; word-wrap: break-word; }
+    .admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; vertical-align: top; word-wrap: break-word; }
     .admin-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
     .admin-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
     .admin-table tr:hover td { background-color: #fafafa; }
 
-    .col-code { width: 15%; }
-    .col-desc { width: 25%; }
-    .col-type { width: 12%; }
-    .col-value { width: 10%; }
-    .col-min { width: 12%; }
-    .col-valid { width: 18%; }
-    .col-status { width: 8%; }
-    .col-actions { width: 120px; }
+    .col-code { width: 12%; }
+    .col-desc { width: 15%; }
+    .col-type { width: 10%; }
+    .col-value { width: 8%; }
+    .col-min { width: 10%; }
+    .col-valid { width: 23%; }
+    .col-status { width: 9%; }
+    .col-actions { width: 13%; }
 
     .badge-status { padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem; }
     .status-active { background: #d1fae5; color: #065f46; }
@@ -79,8 +79,8 @@
                         <tr>
                             <td><strong>{{ $d->code }}</strong></td>
                             <td>{{ $d->description }}</td>
-                            <td>{{ $d->discount_type }}</td>
-                            <td>{{ $d->discount_type == 'Percentage' ? number_format($d->discount_value, 2) . '%' : '₱' . number_format($d->discount_value, 2) }}</td>
+                            <td>{{ ucfirst($d->discount_type) }}</td>
+                            <td>{{ $d->discount_type == 'percentage' ? number_format($d->discount_value, 2) . '%' : '₱' . number_format($d->discount_value, 2) }}</td>
                             <td>₱{{ number_format($d->min_purchase, 2) }}</td>
                             <td style="font-size: 0.8rem;">
                                 {{ $d->start_date ? $d->start_date->format('M d, Y') : 'N/A' }} - <br>

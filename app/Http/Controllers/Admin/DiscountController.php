@@ -60,7 +60,7 @@ class DiscountController extends Controller
             'discount_value' => 'required|numeric|min:0',
             'min_purchase' => 'required|numeric|min:0',
             'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'is_active' => 'boolean',
         ]);
 

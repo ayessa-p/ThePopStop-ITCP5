@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup Guide - The Pop Stop</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { text-align: center; color: #000; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        h2 { color: #555; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 30px; }
+        h3 { color: #8B0000; margin-top: 25px; margin-bottom: 10px; }
+        h4 { color: #2c3e50; margin-top: 20px; margin-bottom: 5px; }
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; border: 1px solid #ddd; }
+        code { font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+        ul, ol { margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        .note { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Setup Guide: Running The Pop Stop on a New Device</h1>
+    <p>Follow these steps to get the system running after downloading the project folder.</p>
+
+    <h2>1. Prerequisites</h2>
+    <p>Before starting, ensure the new device has the following installed:</p>
+    <ul>
+        <li><strong>PHP</strong> (8.2 or higher)</li>
+        <li><strong>Composer</strong> (Dependency manager for PHP)</li>
+        <li><strong>MySQL</strong> (or a local server like XAMPP/WAMP)</li>
+        <li><strong>Node.js & NPM</strong> (For frontend assets)</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. Step-by-Step Installation</h2>
+
+    <h3>Step 1: Open the Project Folder</h3>
+    <p>Open your terminal (Command Prompt, PowerShell, or VS Code Terminal) and navigate to the project folder:</p>
+    <pre>cd ThePopStop</pre>
+
+    <h3>Step 2: Install PHP Dependencies</h3>
+    <p>Run this to install all the necessary Laravel libraries:</p>
+    <pre>composer install</pre>
+
+    <h3>Step 3: Setup Environment File</h3>
+    <p>Create your local environment file by copying the example:</p>
+    <pre>cp .env.example .env</pre>
+
+    <h3>Step 4: Generate Application Key</h3>
+    <p>This is required for Laravel's security and encryption:</p>
+    <pre>php artisan key:generate</pre>
+
+    <h3>Step 5: Configure the Database</h3>
+    <ol>
+        <li>Open your MySQL manager (like phpMyAdmin).</li>
+        <li>Create a new database named <strong>thepopstop</strong>.</li>
+        <li>Open the <code>.env</code> file in the project folder and update the database section:</li>
+    </ol>
+    <pre>DB_DATABASE=thepopstop
+DB_USERNAME=root
+DB_PASSWORD=</pre>
+
+    <h3>Step 6: Run Migrations and Seeders</h3>
+    <p>This will create all the tables and the default Admin account:</p>
+    <pre>php artisan migrate --seed</pre>
+
+    <h3>Step 7: Install and Build Frontend Assets</h3>
+    <p>Install the JavaScript libraries and build the CSS/JS files:</p>
+    <pre>npm install
+npm run build</pre>
+
+    <h3>Step 8: Link Storage</h3>
+    <p>This ensures that uploaded photos (products and profiles) are accessible:</p>
+    <pre>php artisan storage:link</pre>
+
+    <hr>
+
+    <h2>3. Running the System</h2>
+    <p>Start the local development server:</p>
+    <pre>php artisan serve</pre>
+    <p>The system will be accessible at: <strong>http://127.0.0.1:8000</strong></p>
+
+    <hr>
+
+    <h2>4. Default Admin Login</h2>
+    <p>You can log in to the admin dashboard using these credentials (created by the seeder):</p>
+    <ul>
+        <li><strong>Email:</strong> <code>admin@thepopstop.com</code></li>
+        <li><strong>Password:</strong> <code>password</code></li>
+    </ul>
+
+</body>
+</html>

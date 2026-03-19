@@ -19,27 +19,42 @@
     .btn-create:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139,0,0,0.2); }
 
     .admin-table-wrapper { width: 100%; overflow: hidden; margin-top: 1rem; border-radius: 12px; }
-    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; table-layout: fixed; }
+    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; }
     .admin-table th { background: var(--accent); color: white; text-align: left; padding: 1rem; font-weight: 600; font-size: 0.9rem; border-bottom: none; }
     .admin-table th:first-child { border-top-left-radius: 12px; }
     .admin-table th:last-child { border-top-right-radius: 12px; }
-    .admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; vertical-align: middle; word-wrap: break-word; }
+    .admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; vertical-align: top; word-wrap: break-word; }
     .admin-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
     .admin-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
     .admin-table tr:hover td { background-color: #fafafa; }
 
-    .col-id { width: 80px; }
-    .col-supplier { width: 20%; }
+    .col-id { width: 8%; }
+    .col-supplier { width: 22%; }
     .col-date { width: 15%; }
-    .col-items { width: 10%; }
+    .col-items { width: 8%; }
     .col-cost { width: 15%; }
     .col-status { width: 12%; }
-    .col-actions { width: 160px; }
+    .col-actions { width: 20%; }
 
-    .btn-update { background: #a89078; color: white; padding: 0.4rem 1rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; }
-    .btn-update:hover { background: #967d63; transform: translateY(-1px); }
-    .btn-view { color: #666; font-weight: 600; text-decoration: none; font-size: 0.85rem; margin-right: 1rem; }
-    .btn-view:hover { color: var(--primary); }
+    .action-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
+    .btn-action {
+        background: var(--primary);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.75rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        width: 120px;
+    }
+    .btn-action:hover {
+        background: var(--accent);
+        transform: translateY(-1px);
+    }
 
     /* Modal */
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
@@ -50,8 +65,8 @@
     .form-group { margin-bottom: 1.5rem; }
     .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; }
     .form-control { width: 100%; padding: 0.75rem 1rem; border: 2px solid #F3F1EA; border-radius: 10px; background: #fafafa; outline: none; }
-    .btn-submit { background: #a89078; color: white; padding: 0.8rem; border: none; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; transition: 0.2s; }
-    .btn-submit:hover { background: #967d63; }
+    .btn-submit { background: var(--primary); color: white; padding: 0.8rem; border: none; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; transition: 0.2s; }
+    .btn-submit:hover { background: var(--accent); }
 </style>
 @endpush
 
@@ -89,8 +104,15 @@
                             <td>₱{{ number_format($po->total_cost, 2) }}</td>
                             <td>{{ $po->status }}</td>
                             <td>
-                                <a href="{{ route('admin.purchase-orders.show', $po) }}" class="btn-view">View</a>
-                                <button type="button" class="btn-update" onclick="openStatusModal('{{ $po->id }}', '{{ $po->status }}')">Update Status</button>
+                                <div class="action-buttons">
+                                    <a href="{{ route('admin.purchase-orders.show', $po) }}" class="btn-action">View</a>
+                                    <button type="button" class="btn-action" onclick="openStatusModal('{{ $po->id }}', '{{ $po->status }}')">Update Status</button>
+                                    <form action="{{ route('admin.purchase-orders.destroy', $po) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this purchase order?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-action" style="background-color: #dc3545;">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @endforeach

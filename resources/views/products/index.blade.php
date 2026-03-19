@@ -57,5 +57,7 @@
         <p>No products found.</p>
     @endforelse
 </div>
-<div style="margin-top: 2rem;">{{ $products->withQueryString()->links() }}</div>
+<div style="margin-top: 2rem; display: flex; justify-content: center;">
+    {{ $products->withQueryString()->links('pagination::bootstrap-4') }}
+</div>
 @endsection

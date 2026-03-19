@@ -33,7 +33,7 @@ Route::get('/test-email', function () {
                     ->subject('Mailtrap Test Email')
                     ->from('noreply@thepopstop.com', 'The Pop Stop');
         });
-        
+
         return 'Test email sent successfully! Check your Mailtrap inbox.';
     } catch (\Exception $e) {
         return 'Error sending email: ' . $e->getMessage();
@@ -71,10 +71,10 @@ Route::get('/img-data/{path}', function ($path) {
         // Fallback to a placeholder if file not found
         return response()->redirectTo('https://ui-avatars.com/api/?name=NotFound&background=f00&color=fff');
     }
-    
+
     $file = file_get_contents($fullPath);
     $type = mime_content_type($fullPath);
-    
+
     return response($file)->header('Content-Type', $type);
 })->where('path', '.*')->name('image.serve');
 
@@ -89,6 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
+    Route::get('/orders/{order}/receipt/pdf', [OrderController::class, 'receiptPdf'])->name('orders.receipt.pdf');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
@@ -121,12 +122,16 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 
     Route::resource('suppliers', AdminSupplierController::class);
     Route::resource('purchase-orders', AdminPurchaseOrderController::class)->parameters(['purchase-orders' => 'purchaseOrder']);
+    Route::get('/purchase-orders/{purchaseOrder}/receipt', [AdminPurchaseOrderController::class, 'receipt'])->name('purchase-orders.receipt');
     Route::get('/purchase-orders/{purchaseOrder}', [AdminPurchaseOrderController::class, 'show'])->name('purchase-orders.show');
     Route::put('/purchase-orders/{purchaseOrder}/status', [AdminPurchaseOrderController::class, 'updateStatus'])->name('purchase-orders.update-status');
 
     Route::resource('discounts', AdminDiscountController::class);
 
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/pdf', [AdminReportController::class, 'downloadPdf'])->name('reports.pdf');
+    Route::get('/orders/{order}/pdf', [AdminOrderController::class, 'downloadPdf'])->name('admin.orders.pdf');
+    Route::get('/purchase-orders/{purchaseOrder}/pdf', [AdminPurchaseOrderController::class, 'downloadPdf'])->name('admin.purchase-orders.pdf');
     Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
     Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
 });

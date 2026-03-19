@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Pop Stop - Code Mapping</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        h1 { text-align: center; color: #000; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        h2 { text-align: center; color: #555; margin-top: -10px; font-weight: normal; }
+        h3 { color: #000; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 30px; text-transform: uppercase; }
+        h4 { color: #8B0000; margin-bottom: 5px; font-size: 1.1em; }
+        .section-break { margin: 40px 0; border-top: 3px double #ccc; }
+        .file-info { font-weight: bold; margin-bottom: 10px; display: block; color: #2c3e50; }
+        .how-it-works { margin-left: 20px; }
+        .how-it-works ul { list-style-type: disc; }
+        .how-it-works li { margin-bottom: 8px; }
+        code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <h1>The Pop Stop</h1>
+    <h2>Requirements &rarr; Code Mapping</h2>
+
+    <div class="section-break"></div>
+
+    <h3>MP1 &ndash; Product / Service CRUD</h3>
+
+    <h4>1) Product/Service CRUD (create/read/update/delete products)</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ProductController.php</code> (lines ~26-54 for list, 60-81 for create, 88-106 for update, 108-113 for delete)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>List:</strong> Uses <code>Yajra\DataTables</code> to handle server-side processing for the product table in <code>index()</code> method.</li>
+            <li><strong>Access Control:</strong> Protected by <code>admin</code> middleware in the constructor to restrict access to administrators only.</li>
+            <li><strong>Add Product:</strong> <code>store()</code> method validates input via <code>StoreProductRequest</code> and saves new product records.</li>
+            <li><strong>Update Product:</strong> <code>update()</code> method handles editing existing product details and managing image replacements.</li>
+            <li><strong>Delete Product:</strong> <code>destroy()</code> method uses Soft Deletes to remove products while keeping them in the database for potential restoration.</li>
+        </ul>
+    </div>
+
+    <h4>2) Product/Service CRUDRestore (Soft Delete & Restore)</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ProductController.php</code> (lines ~46-52 for restore button, 115-121 for restore logic)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Soft Deletes:</strong> The <code>Product.php</code> model uses the <code>SoftDeletes</code> trait.</li>
+            <li><strong>Restore Action:</strong> The <code>restore()</code> method finds a trashed product by ID and calls <code>$product->restore()</code> to bring it back to the active list.</li>
+        </ul>
+    </div>
+
+    <h4>3) Product/Service CRUD - upload a single photo</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ProductController.php</code> (lines ~67-73 for store, 95-100 for update)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>On Add:</strong> Checks for <code>$request->hasFile('image')</code>, stores it in the <code>public/products</code> directory using Laravel's <code>Storage</code> facade, and saves the path to the <code>image_url</code> column.</li>
+            <li><strong>On Update:</strong> If a new image is uploaded, it deletes the old file using <code>Storage::disk('public')->delete()</code> before saving the new one.</li>
+        </ul>
+    </div>
+
+    <h4>4) Product/Service CRUD - upload/view multiple photos</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ProductPhotoController.php</code> (entire file)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Gallery Management:</strong> Each product can have multiple photos stored in the <code>product_photos</code> table.</li>
+            <li><strong>Upload:</strong> <code>store()</code> method handles multiple file uploads, associating each with the product ID.</li>
+            <li><strong>Primary Image:</strong> Allows users to set one of the gallery images as the 'Primary' photo which becomes the main thumbnail.</li>
+        </ul>
+    </div>
+
+    <h4>5) Product/Service CRUD - import products on excel worksheet</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ProductController.php</code> (lines ~123-133), <code>app/Imports/ProductsImport.php</code></span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Excel Processing:</strong> Uses <code>Maatwebsite\Excel</code> to parse uploaded <code>.xlsx</code> or <code>.csv</code> files.</li>
+            <li><strong>Batch Import:</strong> <code>ProductsImport</code> class maps Excel columns to database fields and handles image downloading from external URLs provided in the sheet.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP2 &ndash; User CRUD & Profiles</h3>
+
+    <h4>1) User Registration with upload photo</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Auth/RegisterController.php</code> (lines ~34-52)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Registration:</strong> Extends Laravel's default registration to include custom fields like <code>username</code>, <code>full_name</code>, and <code>profile_photo</code>.</li>
+            <li><strong>Photo Handling:</strong> Stores the uploaded profile picture in <code>public/profiles</code> and saves the path to the user record.</li>
+        </ul>
+    </div>
+
+    <h4>2) User update profile and upload photo</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/ProfileController.php</code> (lines ~34-62)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Self-Service:</strong> Allows logged-in users to modify their own details and change their profile picture.</li>
+            <li><strong>Cleanup:</strong> Automatically deletes the old profile photo from storage when a new one is uploaded.</li>
+        </ul>
+    </div>
+
+    <h4>3) List users on a datatable</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/UserController.php</code> (lines ~22-46)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Admin View:</strong> Displays all registered users in a <code>Yajra DataTables</code> list with columns for email, role, and status.</li>
+        </ul>
+    </div>
+
+    <h4>4) Admin can set user status (active/inactive) and role</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/UserController.php</code> (lines ~130-138 for status, 90-113 for role update)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Toggle Status:</strong> <code>toggleActive()</code> method flips the <code>is_active</code> boolean, enabling or disabling user login access.</li>
+            <li><strong>Role Management:</strong> Admin can change a user's role between 'customer' and 'admin' via a secure update form.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP3 &ndash; Authentication & Security</h3>
+
+    <h4>1) Authentication and Email Verification</h4>
+    <span class="file-info">File: <code>app/Notifications/VerifyEmailCustom.php</code>, <code>routes/web.php</code></span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Email Verification:</strong> After registration, a custom notification is sent. Users cannot log in fully until they click the verification link.</li>
+            <li><strong>Route Protection:</strong> The <code>verified</code> middleware is applied to all sensitive routes to ensure only confirmed users can interact with the system.</li>
+            <li><strong>Admin Security:</strong> The <code>admin</code> middleware checks the <code>role</code> column to block unauthorized users from the dashboard.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP4 &ndash; Product Review CRUD</h3>
+
+    <h4>1) Customer Review & Rating</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/ReviewController.php</code> (lines ~15-45)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Purchase Verification:</strong> Uses <code>canReviewProduct()</code> in <code>ProductController</code> to verify the user has a 'Delivered' order for that item before allowing a review.</li>
+            <li><strong>Submission:</strong> Users can submit a star rating (1-5) and a text comment.</li>
+        </ul>
+    </div>
+
+    <h4>2) List reviews on datatable & Admin Delete</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ReviewController.php</code> (lines ~20-42 for list, 54-58 for delete)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Moderation:</strong> Admin can see all reviews in a centralized datatable.</li>
+            <li><strong>Removal:</strong> Admin has the authority to delete reviews if they violate terms.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP5 &ndash; Validation</h3>
+
+    <h4>1) Form Validation (Products & Registration)</h4>
+    <span class="file-info">File: <code>app/Http/Requests/StoreProductRequest.php</code>, <code>app/Http/Controllers/Auth/RegisterController.php</code></span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Product Rules:</strong> Ensures <code>price</code> is numeric, <code>sku</code> is unique, and <code>name</code> is required.</li>
+            <li><strong>Registration Rules:</strong> Validates <code>email</code> format, <code>password</code> strength, and <code>username</code> uniqueness.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP6 &ndash; Filter</h3>
+
+    <h4>1) Product Filters (Price, Brand, Category)</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/ProductController.php</code> (lines ~14-56)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Dynamic Query:</strong> Builds a query based on <code>$request</code> parameters for <code>min_price</code>, <code>max_price</code>, <code>brand</code>, and <code>type</code>.</li>
+            <li><strong>Combined Filters:</strong> Users can filter by multiple criteria simultaneously (e.g., "Funko" brand AND "Under &pound;1000").</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP7 &ndash; Charts</h3>
+
+    <h4>1) Sales Analytics & Visualizations</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/Admin/ReportController.php</code> (lines ~54-100)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Yearly Sales:</strong> A line chart showing revenue trends over the last 5 years.</li>
+            <li><strong>Sales Bar Chart:</strong> Displays daily sales with a date range picker for specific analysis.</li>
+            <li><strong>Product Pie Chart:</strong> Visualizes the percentage of total revenue contributed by each individual product.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>MP8 &ndash; Search</h3>
+
+    <h4>1) Home Page Search (LIKE & Scout)</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/HomeController.php</code> (lines ~14-55)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Method 1 (Scout):</strong> Primary search uses <code>Product::search($search)</code> with pagination for high-performance results.</li>
+            <li><strong>Method 2 (LIKE):</strong> Fallback search uses SQL <code>LIKE</code> queries against <code>name</code>, <code>brand</code>, and <code>description</code> columns.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>Term Test Lab &ndash; Transactions & Receipts</h3>
+
+    <h4>1) Transaction Email & Status Updates</h4>
+    <span class="file-info">File: <code>app/Http/Controllers/CheckoutController.php</code> (lines ~90-96), <code>app/Http/Controllers/Admin/OrderController.php</code> (lines ~65-80)</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Order Confirmation:</strong> An email is automatically triggered using <code>OrderReceiptMail</code> immediately after a successful checkout.</li>
+            <li><strong>Status Notification:</strong> When an admin updates an order status (e.g., to 'Shipped'), <code>OrderStatusUpdatedMail</code> is sent to the customer.</li>
+        </ul>
+    </div>
+
+    <h4>2) PDF Receipt Attachment</h4>
+    <span class="file-info">File: <code>app/Mail/OrderReceiptMail.php</code> (lines ~40-49), <code>resources/views/pdf/receipt.blade.php</code></span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>PDF Generation:</strong> Uses <code>Barryvdh\DomPDF</code> to convert a blade view into a PDF document.</li>
+            <li><strong>Email Attachment:</strong> The generated PDF is attached to the receipt email, containing order details, totals, and customer info.</li>
+        </ul>
+    </div>
+
+    <div class="section-break"></div>
+
+    <h3>U1 &ndash; Database Design & Seeding</h3>
+
+    <h4>1) Database Design (2NF & Migrations)</h4>
+    <span class="file-info">File: <code>database/migrations</code> folder</span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Normalization:</strong> Database follows 2nd Normal Form with separate tables for <code>users</code>, <code>products</code>, <code>orders</code>, and <code>reviews</code> linked by foreign keys.</li>
+            <li><strong>Migrations:</strong> Entire schema is built using Laravel migrations for easy setup on any device.</li>
+        </ul>
+    </div>
+
+    <h4>2) Database Seeding</h4>
+    <span class="file-info">File: <code>database/seeders/DatabaseSeeder.php</code>, <code>database/seeders/AdminUserSeeder.php</code></span>
+    <div class="how-it-works">
+        <strong>How it works:</strong>
+        <ul>
+            <li><strong>Initial Data:</strong> <code>php artisan db:seed</code> populates the database with essential data, including a default Admin account for testing.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

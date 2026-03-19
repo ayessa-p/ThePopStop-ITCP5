@@ -31,7 +31,20 @@
     .totals-item { display: flex; justify-content: space-between; padding: 0.75rem 0; font-size: 1rem; }
     .totals-item.total { font-weight: 700; font-size: 1.2rem; color: var(--primary); border-top: 2px solid #eee; margin-top: 0.5rem; padding-top: 1rem; }
     .btn-back { background: var(--primary); color: white; padding: 0.75rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 2rem; transition: background 0.2s; }
-    .btn-back:hover { background: var(--accent); }
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        padding: 0.3rem 0.75rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.75rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-delete:hover { opacity: 0.8; }
+    .review-stars { color: #fbbf24; font-size: 0.85rem; }
 </style>
 @endpush
 
@@ -79,6 +92,42 @@
                 <div class="totals-item total"><span>Total</span><span>₱{{ number_format($order->final_amount, 2) }}</span></div>
             </div>
             <div style="clear: both;"></div>
+
+            @if($order->reviews->count() > 0)
+                <h2 style="margin-top: 3rem; color: var(--dark-brown); font-size: 1.25rem; font-weight: 700;">Customer Reviews for this Order</h2>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Rating</th>
+                            <th>Review</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($order->reviews as $review)
+                        <tr>
+                            <td>{{ $review->product->name }}</td>
+                            <td>
+                                <div class="review-stars">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        {{ $i <= $review->rating ? '★' : '☆' }}
+                                    @endfor
+                                </div>
+                            </td>
+                            <td>{{ $review->review_text }}</td>
+                            <td>
+                                <form action="{{ route('admin.reviews.destroy', $review) }}" method="POST" onsubmit="return confirm('Delete this review?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
         <a href="{{ route('admin.orders.index') }}" class="btn-back">← Back to Orders</a>
     </main>

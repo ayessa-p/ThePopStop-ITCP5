@@ -26,7 +26,7 @@ class ReviewController extends Controller
                 ->addColumn('actions', function (Review $review) {
                     return '<form action="' . route('admin.reviews.destroy', $review) . '" method="POST" class="d-inline">' .
                         csrf_field() . method_field('DELETE') .
-                        '<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Delete this review?\')">Delete</button></form>';
+                        '<button type="submit" class="btn-delete" onclick="return confirm(\'Delete this review?\')">Delete</button></form>';
                 })
                 ->rawColumns(['actions'])
                 ->toJson();
@@ -38,6 +38,6 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         $review->delete();
-        return redirect()->route('admin.reviews.index')->with('success', 'Review deleted.');
+        return back()->with('success', 'Review deleted.');
     }
 }

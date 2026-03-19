@@ -256,6 +256,78 @@
         .od-info-grid { grid-template-columns: 1fr; }
         .od-actions { flex-direction: column; }
     }
+    .btn-review {
+        background: #065f46;
+        color: #fff;
+        border-color: #065f46;
+        font-size: 0.75rem;
+        padding: 0.35rem 0.75rem;
+    }
+    .btn-review:hover {
+        background: #044e3a;
+        border-color: #044e3a;
+        color: #fff;
+    }
+    .review-form-container {
+        background: #fdfcfa;
+        border: 1px solid #f5f2eb;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: 0.25rem;
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ddd' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.09 1.236.321 1.728l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.769-.492-.648-1.728.321-1.728h4.914a1 1 0 00.951-.69l1.519-4.674z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fbbf24' viewBox='0 0 24 24'%3E%3Cpath d='M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.09 1.236.321 1.728l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.769-.492-.648-1.728.321-1.728h4.914a1 1 0 00.951-.69l1.519-4.674z'/%3E%3C/svg%3E");
+    }
+    .review-textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #e8e4dc;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        resize: vertical;
+    }
+    .btn-submit-review {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 0.5rem;
+    }
+    .existing-review {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+    .existing-review-stars {
+        color: #fbbf24;
+        margin-bottom: 0.25rem;
+    }
 </style>
 @endpush
 
@@ -286,8 +358,7 @@
     {{-- ===== LEFT COLUMN ===== --}}
     <div>
 
-        {{-- Order Items --}}
-        <div class="od-card">
+        <div class="od-card" id="items-ordered">
             <h2 class="od-card-title">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
@@ -308,7 +379,58 @@
                 <tbody>
                     @foreach($order->orderItems as $item)
                         <tr>
-                            <td class="item-name-cell">{{ $item->product->name }}</td>
+                            <td class="item-name-cell">
+                                {{ $item->product->name }}
+                                
+                                @if($order->status === 'Delivered')
+                                    @php
+                                        $existingReview = \App\Models\Review::where('product_id', $item->product_id)
+                                            ->where('user_id', auth()->id())
+                                            ->where('order_id', $order->id)
+                                            ->first();
+                                    @endphp
+
+                                    <div id="review-section-{{ $item->id }}">
+                                        @if($existingReview)
+                                            <div class="existing-review">
+                                                <div class="existing-review-stars">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        @if($i <= $existingReview->rating)
+                                                            ★
+                                                        @else
+                                                            ☆
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <div class="existing-review-text">{{ $existingReview->review_text }}</div>
+                                            </div>
+                                        @else
+                                            <button type="button" class="btn-order-action btn-review" onclick="toggleReviewForm({{ $item->id }})" style="margin-top: 0.5rem;">
+                                                Write a Review
+                                            </button>
+
+                                            <div id="review-form-{{ $item->id }}" class="review-form-container" style="display: none;">
+                                                <form action="{{ route('reviews.store', $item->product) }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                                    <div class="od-info-label">Rating</div>
+                                                    <div class="star-rating">
+                                                        @for($i = 5; $i >= 1; $i--)
+                                                            <input type="radio" id="star{{ $i }}-{{ $item->id }}" name="rating" value="{{ $i }}" required>
+                                                            <label for="star{{ $i }}-{{ $item->id }}" title="{{ $i }} stars"></label>
+                                                        @endfor
+                                                    </div>
+                                                    
+                                                    <div class="od-info-label" style="margin-top: 0.75rem;">Your Feedback</div>
+                                                    <textarea name="review_text" class="review-textarea" rows="3" placeholder="Tell us what you think about this product..."></textarea>
+                                                    
+                                                    <button type="submit" class="btn-submit-review">Submit Review</button>
+                                                </form>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                            </td>
                             <td>{{ $item->quantity }}</td>
                             <td>&#8369;{{ number_format($item->unit_price, 2) }}</td>
                             <td>&#8369;{{ number_format($item->quantity * $item->unit_price, 2) }}</td>
@@ -406,5 +528,18 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script>
+    function toggleReviewForm(itemId) {
+        const form = document.getElementById('review-form-' + itemId);
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+</script>
+@endpush
 
 @endsection

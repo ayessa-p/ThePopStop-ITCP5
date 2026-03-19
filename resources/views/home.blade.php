@@ -9,14 +9,9 @@
 
     <form method="GET" action="{{ route('home') }}" class="search-form">
         <div class="input-group">
-        <input class="search-input" type="text" name="search" placeholder="Search by name, series, or brand..." value="{{ request('search') }}">
-        <select class="search-select" name="search_mode">
-            <option value="like" {{ (request('search_mode','like')==='like')?'selected':'' }}>LIKE</option>
-            <option value="model" {{ (request('search_mode')==='model')?'selected':'' }}>Model</option>
-            <option value="scout" {{ (request('search_mode')==='scout')?'selected':'' }}>Scout</option>
-        </select>
-        <button type="submit" class="btn btn-primary search-button">Search</button>
-        @if(request('search'))<a href="{{ route('home') }}" class="btn btn-secondary">Clear</a>@endif
+            <input class="search-input" type="text" name="search" placeholder="Search by name, series, or brand..." value="{{ request('search') }}">
+            <button type="submit" class="btn btn-primary search-button">Search</button>
+            @if(request('search'))<a href="{{ route('home') }}" class="btn btn-secondary">Clear</a>@endif
         </div>
     </form>
 
@@ -55,6 +50,11 @@
         <p>No products found.</p>
     @endforelse
 </div>
+
+<div style="margin-top: 2rem; display: flex; justify-content: center;">
+    {{ $products->appends(request()->query())->links('pagination::bootstrap-4') }}
+</div>
+
 <div style="text-align: center; margin-top: 2rem;">
     <a href="{{ route('products.index') }}" class="btn btn-primary">View All Products</a>
 </div>

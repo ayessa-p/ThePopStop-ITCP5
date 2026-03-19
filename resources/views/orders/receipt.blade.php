@@ -290,9 +290,25 @@
     }
 
     @media print {
-        .site-header, .site-footer, .receipt-actions { display: none !important; }
-        .receipt-card { box-shadow: none; border: 1px solid #ddd; }
-        body { background: #fff !important; }
+        .site-header,
+        .site-footer,
+        .receipt-actions,
+        .receipt-page-title,
+        .receipt-page-subtitle { display: none !important; }
+        body { background: #fff !important; margin: 0; }
+        .receipt-wrapper { max-width: 100%; margin: 0; }
+        .receipt-card {
+            box-shadow: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+        .receipt-header {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .receipt-meta-strip,
+        .receipt-section { page-break-inside: avoid; }
+        @page { margin: 0.8cm 1cm; }
     }
 
     @media (max-width: 640px) {
@@ -471,11 +487,15 @@
             </svg>
             Print Receipt
         </button>
+        <a href="{{ route('orders.receipt.pdf', $order) }}" class="btn-receipt-action btn-receipt-back" style="background:var(--primary);color:#fff;border-color:var(--primary);" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download PDF
+        </a>
     </div>
 
 </div>
 
 @endsection
 ```
-
-Now let me verify there are no remaining emojis and check for any diagnostics:

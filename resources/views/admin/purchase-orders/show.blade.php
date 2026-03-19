@@ -105,6 +105,8 @@
             </div>
 
             <div class="actions-bar">
+                <a href="{{ route('admin.purchase-orders.receipt', $purchaseOrder) }}" class="btn-action btn-secondary-action">Download Receipt</a>
+
                 @if($purchaseOrder->status != 'Received')
                 <form method="POST" action="{{ route('admin.purchase-orders.update-status', $purchaseOrder) }}">
                     @csrf
