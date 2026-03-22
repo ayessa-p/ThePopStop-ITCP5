@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2026 at 01:08 PM
+-- Generation Time: Mar 19, 2026 at 01:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -59,13 +59,6 @@ CREATE TABLE `cart` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`, `created_at`, `updated_at`) VALUES
-(4, 1, 23, 1, '2026-03-22 04:07:16', '2026-03-22 04:07:16');
 
 -- --------------------------------------------------------
 
@@ -379,8 +372,25 @@ INSERT INTO `product_photos` (`id`, `product_id`, `photo_url`, `is_primary`, `di
 (51, 24, 'products/pino4.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
 (52, 24, 'products/pino4.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
 (53, 25, 'products/funko1.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(54, 25, 'products/funko1.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
 (55, 26, 'products/funko2.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
-(67, 32, 'products/funko8.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04');
+(56, 26, 'products/funko2.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(57, 27, 'products/funko3.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(58, 27, 'products/funko3.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(59, 28, 'products/funko4.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(60, 28, 'products/funko4.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(61, 29, 'products/funko5.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(62, 29, 'products/funko5.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(63, 30, 'products/funko6.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(64, 30, 'products/funko6.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(65, 31, 'products/funko7.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(66, 31, 'products/funko7.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(67, 32, 'products/funko8.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(68, 32, 'products/funko8.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(69, 33, 'products/funko9.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(70, 33, 'products/funko9.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(71, 34, 'products/funko10.2.jpg', 0, 1, '2026-03-17 09:07:04', '2026-03-17 09:07:04'),
+(72, 34, 'products/funko10.3.jpg', 0, 2, '2026-03-17 09:07:04', '2026-03-17 09:07:04');
 
 -- --------------------------------------------------------
 
@@ -472,7 +482,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('cN2NIn4JMBpUOXrn2MCDBL8yTW8UD603a515ARb2', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTENTaDFndWg3U1BYWkVxQ1Fua1djWjBvV3k4T2pDQUNId04zVjZzMSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9pbmRleC5waHAvaW1nLWRhdGEvcHJvZHVjdHMvZnVua28xMC5qcGciO3M6NToicm91dGUiO3M6MTE6ImltYWdlLnNlcnZlIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1774181254);
+('WJdSdDGbF3g3rp2S0RhawwkOqZVUT3QrU4n13UWg', 4, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoic1Foc2tSeHVBRW9ObVR6SFFmSmVCUnFiUmtzanNhZlhkNlNaWkVYVSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NjA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9pbmRleC5waHAvaW1nLWRhdGEvcHJvZHVjdHMvZnVua282LmpwZyI7czo1OiJyb3V0ZSI7czoxMToiaW1hZ2Uuc2VydmUiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0O3M6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6Mzg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9pbmRleC5waHAvb3JkZXJzIjt9fQ==', 1773922190);
 
 -- --------------------------------------------------------
 
@@ -681,7 +691,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `discounts`

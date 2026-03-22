@@ -14,36 +14,36 @@
     .admin-main { flex: 1; min-width: 0; }
     .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     .admin-header h1 { color: var(--dark-brown); font-size: 2.25rem; font-weight: 700; margin: 0; }
-    .discounts-section { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .discounts-section { background: white; padding: 1.25rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
     .btn-add { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
     .btn-add:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139,0,0,0.2); }
 
-    .admin-table-wrapper { width: 100%; overflow: hidden; margin-top: 1rem; border-radius: 12px; }
-    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; }
-    .admin-table th { background: var(--accent); color: white; text-align: left; padding: 1rem; font-weight: 600; font-size: 0.9rem; border-bottom: none; }
+    .admin-table-wrapper { width: 100%; overflow: visible; margin-top: 1rem; border-radius: 12px; }
+    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; table-layout: fixed; }
+    .admin-table th { background: var(--accent); color: white; text-align: left; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.8rem; border-bottom: none; white-space: nowrap; }
     .admin-table th:first-child { border-top-left-radius: 12px; }
     .admin-table th:last-child { border-top-right-radius: 12px; }
-    .admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; vertical-align: top; word-wrap: break-word; }
+    .admin-table td { padding: 0.75rem 0.5rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.75rem; vertical-align: middle; word-wrap: break-word; line-height: 1.2; }
     .admin-table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
     .admin-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
     .admin-table tr:hover td { background-color: #fafafa; }
 
     .col-code { width: 12%; }
-    .col-desc { width: 15%; }
+    .col-desc { width: 18%; }
     .col-type { width: 10%; }
     .col-value { width: 8%; }
-    .col-min { width: 10%; }
-    .col-valid { width: 23%; }
-    .col-status { width: 9%; }
-    .col-actions { width: 13%; }
+    .col-min { width: 12%; }
+    .col-valid { width: 18%; }
+    .col-status { width: 10%; }
+    .col-actions { width: 12%; }
 
-    .badge-status { padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: 600; font-size: 0.75rem; }
+    .badge-status { padding: 0.3rem 0.6rem; border-radius: 50px; font-weight: 700; font-size: 0.7rem; }
     .status-active { background: #d1fae5; color: #065f46; }
     .status-inactive { background: #fee2e2; color: #991b1b; }
 
     .action-buttons { display: flex; flex-direction: column; gap: 0.4rem; align-items: center; }
     .btn-action { width: 80px; padding: 0.3rem; border-radius: 50px; text-align: center; text-decoration: none; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; color: white; }
-    .btn-edit { background: #a89078; }
+    .btn-edit { background: var(--primary); }
     .btn-delete { background: #dc3545; }
     .btn-action:hover { opacity: 0.8; transform: translateY(-1px); }
 </style>

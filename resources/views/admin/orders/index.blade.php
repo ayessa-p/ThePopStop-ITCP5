@@ -14,8 +14,12 @@
     .admin-main { flex: 1; min-width: 0; }
     .admin-header h1 { color: var(--dark-brown); font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; }
     .orders-section { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-    .status-filters { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .status-filter { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.6rem 1.25rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; border: 2px solid var(--primary); background: white; color: var(--primary); }
+    .status-filters { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.5rem; }
+    .status-filter { display: flex; align-items: center; gap: 0.4rem; text-decoration: none; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; border: 2px solid var(--primary); background: white; color: var(--primary); white-space: nowrap; flex-shrink: 0; }
+    .status-filters::-webkit-scrollbar { height: 6px; }
+    .status-filters::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+    .status-filters::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+    .status-filters::-webkit-scrollbar-thumb:hover { background: #bbb; }
     .status-filter.active, .status-filter:hover { background: var(--primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .admin-table-wrapper { width: 100%; overflow-x: auto; margin: 0; padding: 0; }
     .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; }

@@ -97,35 +97,78 @@
     .upload-box {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
+        max-width: 600px;
     }
 
-    .file-input-label {
+    .file-input-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .custom-file-upload {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+    }
+
+    .btn-choose {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        padding: 0.6rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-choose:hover {
+        background: var(--bg);
+        transform: translateY(-1px);
+    }
+
+    .file-name-display {
         color: #666;
         font-size: 0.9rem;
-        font-weight: 600;
+        font-weight: 500;
+        font-style: italic;
+    }
+
+    #photos {
+        display: none;
     }
 
     .file-hint {
-        color: #aaa;
-        font-size: 0.75rem;
-        margin-left: 1rem;
+        color: #888;
+        font-size: 0.8rem;
+        display: block;
+        margin-top: 0.25rem;
     }
 
     .btn-upload {
         background: var(--primary);
         color: white;
-        padding: 0.75rem 2rem;
+        padding: 0.8rem 2.5rem;
         border-radius: 50px;
         border: none;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         width: fit-content;
-        transition: background 0.2s;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(139, 0, 0, 0.15);
     }
 
     .btn-upload:hover {
         background: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(139, 0, 0, 0.25);
     }
 
     /* Photo Grid */
@@ -232,12 +275,18 @@
             <h2>Upload New Photos</h2>
             <form method="POST" action="{{ route('admin.products.photos.store', $product) }}" enctype="multipart/form-data" class="upload-box">
                 @csrf
-                <div class="file-input-group">
-                    <p class="file-input-label">Select Photos (Multiple)</p>
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                        <input type="file" name="photos[]" id="photos" multiple accept="image/*" class="form-control-file">
-                        <span class="file-hint">You can select multiple images at once. Supported: JPG, PNG, GIF, WEBP</span>
-                    </div>
+                <div class="file-input-wrapper">
+                    <label for="photos" class="custom-file-upload">
+                        <div class="btn-choose">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Choose Photos
+                        </div>
+                        <span id="file-chosen" class="file-name-display">No files chosen</span>
+                        <input type="file" name="photos[]" id="photos" multiple accept="image/*">
+                    </label>
+                    <span class="file-hint">Select multiple images (JPG, PNG, GIF, WEBP)</span>
                 </div>
                 <button type="submit" class="btn-upload">Upload Photos</button>
             </form>
@@ -302,4 +351,22 @@
         </div>
     </main>
 </div>
+@push('scripts')
+<script>
+    const fileInput = document.getElementById('photos');
+    const fileChosen = document.getElementById('file-chosen');
+
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+            if (this.files.length === 1) {
+                fileChosen.textContent = this.files[0].name;
+            } else {
+                fileChosen.textContent = this.files.length + ' files selected';
+            }
+        } else {
+            fileChosen.textContent = 'No files chosen';
+        }
+    });
+</script>
+@endpush
 @endsection

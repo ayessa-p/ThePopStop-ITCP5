@@ -20,7 +20,7 @@
 
     .admin-table-wrapper { width: 100%; overflow: hidden; margin-top: 1rem; border-radius: 12px; }
     .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; }
-    .admin-table th { background: var(--accent); color: white; text-align: left; padding: 1rem; font-weight: 600; font-size: 0.9rem; border-bottom: none; }
+    .admin-table th { background: var(--accent); color: white; text-align: left; padding: 1rem; font-weight: 600; font-size: 0.9rem; border-bottom: none; white-space: nowrap; }
     .admin-table th:first-child { border-top-left-radius: 12px; }
     .admin-table th:last-child { border-top-right-radius: 12px; }
     .admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid #F3F1EA; color: #444; font-size: 0.9rem; vertical-align: top; word-wrap: break-word; }
@@ -28,8 +28,8 @@
     .admin-table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
     .admin-table tr:hover td { background-color: #fafafa; }
 
-    .col-id { width: 8%; }
-    .col-supplier { width: 22%; }
+    .col-id { width: 10%; }
+    .col-supplier { width: 20%; }
     .col-date { width: 15%; }
     .col-items { width: 8%; }
     .col-cost { width: 15%; }
