@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITCP226 Requirements Mapping - The Pop Stop</title>
+    <style>
+        :root {
+            --primary: #8B0000;
+            --accent: #B22222;
+            --bg: #F3F1EA;
+            --text: #222;
+            --card-bg: #fff;
+            --code-bg: #2d2d2d;
+            --code-text: #ccc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 20px;
+            margin-top: 0;
+        }
+        h2 {
+            color: var(--accent);
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            margin-top: 50px;
+            background: #fdfcfa;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        .requirement-block {
+            margin-bottom: 30px;
+            padding: 25px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .requirement-block:hover {
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .requirement-title {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-path {
+            font-family: 'Consolas', monospace;
+            background: #fdf2f2;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            color: #c0392b;
+            display: block;
+            margin-top: 8px;
+            border: 1px solid #fadbd8;
+        }
+        .line-number {
+            color: #2980b9;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .explanation {
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+        .syntax-box {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.92rem;
+            margin-top: 15px;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary);
+        }
+        .points {
+            background: var(--primary);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: #fff;
+        }
+        .info-table th, .info-table td {
+            text-align: left;
+            padding: 15px;
+            border: 1px solid #eee;
+        }
+        .info-table th {
+            background-color: var(--primary);
+            color: #fff;
+        }
+        .sub-req {
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ITCP226 Web Development - Code Mapping (with Line Numbers)</h1>
+        <p style="text-align: center;">Direct mapping of requirements to specific code locations in <strong>The Pop Stop</strong>.</p>
+
+        <!-- MP1 -->
+        <h2>MP1: Product/Service CRUD & Excel (20pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Product CRUD, Multiple Photos, Excel Import</span>
+                <span class="points">20 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/Admin/ProductController.php <span class="line-number">(Line 32: store, Line 64: update, Line 84: destroy)</span></span>
+            <span class="file-path">app/Http/Controllers/Admin/ProductPhotoController.php <span class="line-number">(Line 15: store)</span></span>
+            <span class="file-path">app/Imports/ProductsImport.php <span class="line-number">(Line 12: model)</span></span>
+            <div class="explanation">
+                <strong>CRUD:</strong> Methods <code>store()</code>, <code>update()</code>, and <code>destroy()</code> handle the life cycle.<br>
+                <strong>Photos:</strong> <code>ProductPhotoController@store</code> handles multiple photo uploads.<br>
+                <strong>Excel:</strong> <code>ProductsImport@model</code> maps spreadsheet rows directly to database columns.
+            </div>
+        </div>
+
+        <!-- MP2 -->
+        <h2>MP2: User CRUD (20pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>User Registration & Admin Control</span>
+                <span class="points">20 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/Auth/RegisterController.php <span class="line-number">(Line 25: register logic)</span></span>
+            <span class="file-path">app/Http/Controllers/ProfileController.php <span class="line-number">(Line 28: update profile)</span></span>
+            <span class="file-path">app/Http/Controllers/Admin/UserController.php <span class="line-number">(Line 25: update role/status)</span></span>
+            <div class="explanation">
+                <strong>Registration:</strong> Handles photo upload and user creation.<br>
+                <strong>Admin List:</strong> Admin updates user roles and active status on Line 25 of <code>UserController</code>.
+            </div>
+        </div>
+
+        <!-- MP3 -->
+        <h2>MP3: Authentication & Security (20pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Email Verification & Admin Middleware</span>
+                <span class="points">20 pts</span>
+            </div>
+            <span class="file-path">routes/web.php <span class="line-number">(Line 100: Middleware group)</span></span>
+            <span class="file-path">app/Http/Middleware/AdminMiddleware.php <span class="line-number">(Line 18: handle)</span></span>
+            <div class="explanation">
+                <strong>Security:</strong> Lines 100+ in <code>web.php</code> wrap routes in <code>auth</code> and <code>verified</code>. Custom <code>AdminMiddleware</code> checks for admin role on Line 18.
+            </div>
+        </div>
+
+        <!-- MP4 -->
+        <h2>MP4: Product Reviews (20pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Review CRUD & Filtering</span>
+                <span class="points">20 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/ReviewController.php <span class="line-number">(Line 20: store, Line 80: filterBadWords)</span></span>
+            <span class="file-path">app/Http/Controllers/Admin/ReviewController.php <span class="line-number">(Line 25: destroy)</span></span>
+            <div class="explanation">
+                <strong>Moderation:</strong> <code>filterBadWords()</code> on Line 80 cleans user input. Admin can delete reviews in <code>Admin\ReviewController</code>.
+            </div>
+        </div>
+
+        <!-- MP6 -->
+        <h2>MP6: Filter (15pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Price & Brand Filters</span>
+                <span class="points">15 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/HomeController.php <span class="line-number">(Line 15: search logic, Line 27: filter logic)</span></span>
+            <div class="explanation">
+                <strong>Filtering:</strong> Logic on Line 27 applies brand and status filters to the product query.
+            </div>
+        </div>
+
+        <!-- MP7 -->
+        <h2>MP7: Charts (15pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Yearly Sales & Pie Charts</span>
+                <span class="points">15 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/Admin/ReportController.php <span class="line-number">(Line 60: barChart, Line 73: yearlyChart, Line 92: productSales)</span></span>
+            <div class="explanation">
+                <strong>Visuals:</strong> Line 60 builds the bar chart, Line 73 the yearly line chart, and Line 92 calculates the product distribution for the pie chart.
+            </div>
+        </div>
+
+        <!-- MP8 -->
+        <h2>MP8: Search (15pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Laravel Scout Model Search</span>
+                <span class="points">15 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/HomeController.php <span class="line-number">(Line 17: Product::search)</span></span>
+            <span class="file-path">app/Models/Product.php <span class="line-number">(Line 43: toSearchableArray)</span></span>
+            <div class="explanation">
+                <strong>Search:</strong> Uses <code>Product::search()</code> on Line 17. The searchable fields are defined in the Model on Line 43.
+            </div>
+        </div>
+
+        <!-- Term Test -->
+        <h2>Term Test Lab (30pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>PDF Receipts & Email Transactions</span>
+                <span class="points">30 pts</span>
+            </div>
+            <span class="file-path">app/Http/Controllers/CheckoutController.php <span class="line-number">(Line 92: send email)</span></span>
+            <span class="file-path">app/Http/Controllers/OrderController.php <span class="line-number">(Line 51: receiptPdf)</span></span>
+            <div class="explanation">
+                <strong>Automation:</strong> <code>CheckoutController</code> sends the initial email on Line 92. <code>OrderController</code> generates the PDF receipt on Line 51.
+            </div>
+        </div>
+
+        <!-- U1 -->
+        <h2>U1: Database & Seeding (20pts)</h2>
+        <div class="requirement-block">
+            <div class="requirement-title">
+                <span>Migrations & Seeders</span>
+                <span class="points">20 pts</span>
+            </div>
+            <span class="file-path">database/seeders/UserSeeder.php <span class="line-number">(Line 47: email_verified_at)</span></span>
+            <span class="file-path">database/seeders/ProductSeeder.php <span class="line-number">(Line 15: products array)</span></span>
+            <div class="explanation">
+                <strong>Persistence:</strong> Seeders ensure all tables are filled. Line 47 of <code>UserSeeder</code> ensures seeded users are pre-verified.
+            </div>
+        </div>
+
+        <div class="explanation" style="text-align: center; margin-top: 50px; color: #888; font-size: 0.9rem;">
+            Generated for ITCP226 MP Project - 2026
+        </div>
+    </div>
+</body>
+</html>
