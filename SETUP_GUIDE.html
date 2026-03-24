@@ -2,92 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setup Guide - The Pop Stop</title>
     <style>
-        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h1 { text-align: center; color: #000; border-bottom: 2px solid #333; padding-bottom: 10px; }
-        h2 { color: #555; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 30px; }
-        h3 { color: #8B0000; margin-top: 25px; margin-bottom: 10px; }
-        h4 { color: #2c3e50; margin-top: 20px; margin-bottom: 5px; }
-        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; border: 1px solid #ddd; }
-        code { font-family: 'Courier New', Courier, monospace; font-weight: bold; }
-        ul, ol { margin-bottom: 20px; }
-        li { margin-bottom: 10px; }
-        .note { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; }
+        :root {
+            --primary: #8B0000;
+            --accent: #B22222;
+            --bg: #F3F1EA;
+            --text: #222;
+            --card-bg: #fff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 20px;
+            margin-top: 0;
+        }
+        h2 {
+            color: var(--accent);
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: var(--primary);
+            margin-top: 25px;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+        .credentials {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .credentials ul {
+            list-style: none;
+            padding: 0;
+        }
+        .credentials li {
+            margin-bottom: 10px;
+        }
+        strong {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Setup Guide for The Pop Stop</h1>
+        <p>Follow these steps to set up and run the project on your new device.</p>
 
-    <h1>Setup Guide: Running The Pop Stop on a New Device</h1>
-    <p>Follow these steps to get the system running after downloading the project folder.</p>
+        <h2>Prerequisites</h2>
+        <ul>
+            <li><strong>PHP (>= 8.2)</strong></li>
+            <li><strong>Composer</strong></li>
+            <li><strong>Node.js & NPM</strong></li>
+            <li><strong>MySQL/MariaDB</strong> (XAMPP or WAMP recommended)</li>
+        </ul>
 
-    <h2>1. Prerequisites</h2>
-    <p>Before starting, ensure the new device has the following installed:</p>
-    <ul>
-        <li><strong>PHP</strong> (8.2 or higher)</li>
-        <li><strong>Composer</strong> (Dependency manager for PHP)</li>
-        <li><strong>MySQL</strong> (or a local server like XAMPP/WAMP)</li>
-        <li><strong>Node.js & NPM</strong> (For frontend assets)</li>
-    </ul>
+        <hr>
 
-    <hr>
+        <h2>Setup Instructions</h2>
 
-    <h2>2. Step-by-Step Installation</h2>
+        <div class="step">
+            <h3>1. Database Configuration</h3>
+            <ol>
+                <li>Open your database manager (e.g., <strong>phpMyAdmin</strong>).</li>
+                <li>Create a new database named <code>thepopstop</code>.</li>
+            </ol>
+        </div>
 
-    <h3>Step 1: Open the Project Folder</h3>
-    <p>Open your terminal (Command Prompt, PowerShell, or VS Code Terminal) and navigate to the project folder:</p>
-    <pre>cd ThePopStop</pre>
-
-    <h3>Step 2: Install PHP Dependencies</h3>
-    <p>Run this to install all the necessary Laravel libraries:</p>
-    <pre>composer install</pre>
-
-    <h3>Step 3: Setup Environment File</h3>
-    <p>Create your local environment file by copying the example:</p>
-    <pre>cp .env.example .env</pre>
-
-    <h3>Step 4: Generate Application Key</h3>
-    <p>This is required for Laravel's security and encryption:</p>
-    <pre>php artisan key:generate</pre>
-
-    <h3>Step 5: Configure the Database</h3>
-    <ol>
-        <li>Open your MySQL manager (like phpMyAdmin).</li>
-        <li>Create a new database named <strong>thepopstop</strong>.</li>
-        <li>Open the <code>.env</code> file in the project folder and update the database section:</li>
-    </ol>
-    <pre>DB_DATABASE=thepopstop
+        <div class="step">
+            <h3>2. Environment Setup</h3>
+            <ol>
+                <li>Open the project folder on your new device.</li>
+                <li>Copy <code>.env.example</code> and rename it to <code>.env</code>.</li>
+                <li>Update the database settings in <code>.env</code>:</li>
+            </ol>
+            <pre>
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=thepopstop
 DB_USERNAME=root
 DB_PASSWORD=</pre>
+        </div>
 
-    <h3>Step 6: Run Migrations and Seeders</h3>
-    <p>This will create all the tables and the default Admin account:</p>
-    <pre>php artisan migrate --seed</pre>
+        <div class="step">
+            <h3>3. Install Dependencies</h3>
+            <p>Open a terminal inside the project folder and run:</p>
+            <pre>
+composer install
+npm install</pre>
+        </div>
 
-    <h3>Step 7: Install and Build Frontend Assets</h3>
-    <p>Install the JavaScript libraries and build the CSS/JS files:</p>
-    <pre>npm install
-npm run build</pre>
+        <div class="step">
+            <h3>4. Application Key</h3>
+            <pre>php artisan key:generate</pre>
+        </div>
 
-    <h3>Step 8: Link Storage</h3>
-    <p>This ensures that uploaded photos (products and profiles) are accessible:</p>
-    <pre>php artisan storage:link</pre>
+        <div class="step">
+            <h3>5. Migration and Seeding</h3>
+            <p>This will recreate all tables and restore all data:</p>
+            <pre>php artisan migrate:refresh --seed</pre>
+        </div>
 
-    <hr>
+        <div class="step">
+            <h3>6. Search Index</h3>
+            <pre>php artisan scout:import "App\Models\Product"</pre>
+        </div>
 
-    <h2>3. Running the System</h2>
-    <p>Start the local development server:</p>
-    <pre>php artisan serve</pre>
-    <p>The system will be accessible at: <strong>http://127.0.0.1:8000</strong></p>
+        <div class="step">
+            <h3>7. Link Storage</h3>
+            <pre>php artisan storage:link</pre>
+        </div>
 
-    <hr>
+        <div class="step">
+            <h3>8. Compile Assets</h3>
+            <pre>npm run build</pre>
+        </div>
 
-    <h2>4. Default Admin Login</h2>
-    <p>You can log in to the admin dashboard using these credentials (created by the seeder):</p>
-    <ul>
-        <li><strong>Email:</strong> <code>admin@thepopstop.com</code></li>
-        <li><strong>Password:</strong> <code>password</code></li>
-    </ul>
+        <hr>
 
+        <h2>Running the Application</h2>
+        <p>To start the server, run:</p>
+        <pre>php artisan serve</pre>
+        <p>Then visit: <strong>http://127.0.0.1:8000</strong></p>
+
+        <div class="credentials">
+            <h2>Login Credentials (Seeded)</h2>
+            <ul>
+                <li><strong>Admin:</strong> admin@thepopstop.com / password</li>
+                <li><strong>Customer (Ayessa):</strong> aye@gmail.com / password</li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

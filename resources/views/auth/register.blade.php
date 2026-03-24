@@ -181,21 +181,12 @@
             {{-- Account Info --}}
             <div class="form-section-label">Account Info</div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="username">Username <span style="color:var(--primary);">*</span></label>
-                    <input type="text" name="username" id="username" class="reg-input" value="{{ old('username') }}" required autocomplete="username">
-                    @error('username')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="name">Display Name <span style="color:var(--primary);">*</span></label>
-                    <input type="text" name="name" id="name" class="reg-input" value="{{ old('name') }}" required>
-                    @error('name')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="form-group">
+                <label for="username">Username <span style="color:var(--primary);">*</span></label>
+                <input type="text" name="username" id="username" class="reg-input" value="{{ old('username') }}" required autocomplete="username">
+                @error('username')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">

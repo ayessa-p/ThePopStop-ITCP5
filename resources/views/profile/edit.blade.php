@@ -251,14 +251,10 @@
                     Account Information
                 </h2>
                 <div class="form-grid-2">
-                    <div class="pro-field">
+                    <div class="pro-field" style="grid-column: 1 / -1;">
                         <label class="pro-label" for="username">Username <span style="color:var(--primary);">*</span></label>
                         <input type="text" name="username" id="username" class="pro-input" value="{{ old('username', $user->username) }}" required>
                         @error('username')<div class="pro-error">{{ $message }}</div>@enderror
-                    </div>
-                    <div class="pro-field">
-                        <label class="pro-label" for="name">Display Name <span style="color:var(--primary);">*</span></label>
-                        <input type="text" name="name" id="name" class="pro-input" value="{{ old('name', $user->name) }}" required>
                     </div>
                     <div class="pro-field" style="grid-column: 1 / -1;">
                         <label class="pro-label" for="email">Email Address <span style="color:var(--primary);">*</span></label>

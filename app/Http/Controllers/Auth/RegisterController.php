@@ -21,7 +21,6 @@ class RegisterController extends Controller
     {
         $validated = $request->validate([
             'username' => 'required|string|max:255|unique:users,username',
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Password::defaults()],
             'full_name' => 'nullable|string|max:255',
@@ -31,7 +30,8 @@ class RegisterController extends Controller
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-        $validated['full_name'] = $validated['full_name'] ?? $validated['name'];
+        $validated['name'] = $validated['username'];
+        $validated['full_name'] = $validated['full_name'] ?? $validated['username'];
         $validated['role'] = 'customer';
         $validated['is_active'] = true;
 
@@ -45,8 +45,6 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect()->route('verification.notice');
+        return redirect()->route('login')->with('success', 'Registration successful! Please check your email for a verification link before logging in.');
     }
 }

@@ -46,6 +46,7 @@ class Product extends Model
             'character' => $this->character,
             'category' => $this->category,
             'type' => $this->type,
+            'status' => $this->status,
         ];
     }
 

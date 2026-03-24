@@ -29,7 +29,6 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($user->id)],
-            'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'full_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',
@@ -38,6 +37,8 @@ class ProfileController extends Controller
             'current_password' => 'nullable|current_password',
             'password' => ['nullable', 'confirmed', Password::defaults()],
         ]);
+
+        $validated['name'] = $validated['username'];
 
         unset($validated['current_password'], $validated['password']);
         if ($request->filled('password')) {
