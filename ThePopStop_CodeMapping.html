@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThePopStop — ITCP5 Code Mapping</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --red: #8B0000;
+    --red-light: #b91c1c;
+    --red-pale: #fef2f2;
+    --gold: #ca8a04;
+    --gold-pale: #fefce8;
+    --ink: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9f6f2;
+    --white: #ffffff;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+    --tag-green: #dcfce7;
+    --tag-green-text: #166534;
+    --tag-blue: #dbeafe;
+    --tag-blue-text: #1e40af;
+    --tag-purple: #f3e8ff;
+    --tag-purple-text: #6b21a8;
+    --tag-orange: #ffedd5;
+    --tag-orange-text: #9a3412;
+    --tag-red: #fee2e2;
+    --tag-red-text: #991b1b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--red);
+    color: white;
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 40px);
+  }
+  .header-inner { position: relative; max-width: 1100px; margin: 0 auto; }
+  .header-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: rgba(255,255,255,0.5); }
+  .header-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 600px;
+    margin-bottom: 28px;
+  }
+  .header-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+  /* PACKAGES SECTION */
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .pkg-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--red);
+  }
+  .pkg-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .pkg-version {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 10px;
+  }
+  .pkg-desc { font-size: 13.5px; color: #374151; line-height: 1.6; }
+
+  /* SECTION HEADINGS */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: var(--red);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 400;
+  }
+
+  /* MP CARDS */
+  .mp-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .mp-header {
+    background: var(--red);
+    color: white;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .mp-header-left { display: flex; align-items: center; gap: 16px; }
+  .mp-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+  }
+  .mp-title { font-size: 20px; font-weight: 700; }
+  .mp-pts {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 999px;
+    padding: 4px 14px;
+    white-space: nowrap;
+  }
+  .mp-body { padding: 28px; }
+
+  /* FILE ENTRIES */
+  .file-entry {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .file-header {
+    background: #f8f8f8;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .file-path {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 700;
+    flex: 1;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .tag-green { background: var(--tag-green); color: var(--tag-green-text); }
+  .tag-blue { background: var(--tag-blue); color: var(--tag-blue-text); }
+  .tag-purple { background: var(--tag-purple); color: var(--tag-purple-text); }
+  .tag-orange { background: var(--tag-orange); color: var(--tag-orange-text); }
+  .tag-red { background: var(--tag-red); color: var(--tag-red-text); }
+
+  .file-body { padding: 18px; }
+  .file-purpose {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    overflow-x: auto;
+  }
+  .code-line-ref {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #6c7086;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .code-block code {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--code-text);
+    white-space: pre;
+    display: block;
+    line-height: 1.6;
+  }
+  .code-block code .kw { color: #cba6f7; }
+  .code-block code .fn { color: #89b4fa; }
+  .code-block code .str { color: #a6e3a1; }
+  .code-block code .cmt { color: #6c7086; font-style: italic; }
+  .code-block code .num { color: #fab387; }
+
+  /* EXPLANATION ENTRIES */
+  .explain-item {
+    margin-bottom: 14px;
+    padding-left: 16px;
+    border-left: 3px solid var(--border);
+  }
+  .explain-item:last-child { margin-bottom: 0; }
+  .explain-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .explain-text {
+    font-size: 13.5px;
+    color: #374151;
+    line-height: 1.65;
+  }
+
+  /* SUB-SECTIONS */
+  .sub-section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .sub-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .sub-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sub-title::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: var(--red);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* MIGRATION TABLE */
+  .mig-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .mig-table th {
+    background: #f8f8f8;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+  }
+  .mig-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .mig-table tr:last-child td { border-bottom: none; }
+  .mig-table tr:hover td { background: #fafafa; }
+  .mig-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .toc-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .toc-item:hover { background: var(--red-pale); color: var(--red); }
+  .toc-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    background: var(--red);
+    color: white;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    border-top: 1px solid var(--border);
+    background: white;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">ITCP226 — Computer Programming 5: Web Development</div>
+    <h1>ThePopStop <span>/ Code Mapping</span></h1>
+    <p class="header-sub">A complete guide to where each Machine Project requirement is implemented — with file paths, line references, and explanations.</p>
+    <div class="header-pills">
+      <span class="pill">Laravel 12</span>
+      <span class="pill">PHP 8.2+</span>
+      <span class="pill">MySQL</span>
+      <span class="pill">Yajra DataTables</span>
+      <span class="pill">Laravel Scout + TNTSearch</span>
+      <span class="pill">Maatwebsite Excel</span>
+      <span class="pill">DomPDF</span>
+      <span class="pill">ConsoleTVs Charts</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#packages"><span class="toc-num">📦</span> Packages &amp; Libraries</a>
+      <a class="toc-item" href="#mp1"><span class="toc-num">MP1</span> Product/Service CRUD</a>
+      <a class="toc-item" href="#mp2"><span class="toc-num">MP2</span> User CRUD</a>
+      <a class="toc-item" href="#mp3"><span class="toc-num">MP3</span> Authentication</a>
+      <a class="toc-item" href="#mp4"><span class="toc-num">MP4</span> Product Reviews</a>
+      <a class="toc-item" href="#mp5"><span class="toc-num">MP5</span> Validation</a>
+      <a class="toc-item" href="#mp6"><span class="toc-num">MP6</span> Filtering</a>
+      <a class="toc-item" href="#mp7"><span class="toc-num">MP7</span> Charts</a>
+      <a class="toc-item" href="#mp8"><span class="toc-num">MP8</span> Search</a>
+      <a class="toc-item" href="#term"><span class="toc-num">TT</span> Term Test (Transactions)</a>
+      <a class="toc-item" href="#u1"><span class="toc-num">U1</span> DB Design / Migrations</a>
+      <a class="toc-item" href="#middleware"><span class="toc-num">MW</span> Middleware</a>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PACKAGES -->
+  <!-- ============================================================ -->
+  <div id="packages">
+    <div class="section-label">Dependencies</div>
+    <div class="section-title">Packages &amp; Libraries Used <span class="badge">composer.json</span></div>
+
+    <div class="packages-grid">
+      <div class="pkg-card">
+        <div class="pkg-name">laravel/framework</div>
+        <div class="pkg-version">^12.0</div>
+        <div class="pkg-desc">The core Laravel PHP framework. Provides routing, middleware, Eloquent ORM, authentication, mail, queues, and all base scaffolding used throughout the project.</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">yajra/laravel-datatables-oracle</div>
+        <div class="pkg-version">^12.7</div>
+        <div class="pkg-desc">Converts Eloquent queries into server-side DataTables JSON responses. Used for all admin datatable listings (products, users, reviews). Handles searching, sorting, and pagination automatically.</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">maatwebsite/excel</div>
+        <div class="pkg-version">^3.1</div>
+        <div class="pkg-desc">Laravel Excel — enables importing products from .xlsx/.xls/.csv files. The <code style="font-family:monospace;color:var(--red)">ProductsImport</code> class uses its <code style="font-family:monospace;color:var(--red)">ToModel</code>, <code style="font-family:monospace;color:var(--red)">WithHeadingRow</code>, <code style="font-family:monospace;color:var(--red)">WithChunkReading</code> interfaces for batch, validated importing.</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">barryvdh/laravel-dompdf</div>
+        <div class="pkg-version">^3.1</div>
+        <div class="pkg-desc">Renders Blade views as PDF files. Used in the Term Test to attach order receipts to emails and allow admin PDF downloads of reports and order details.</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">laravel/scout</div>
+        <div class="pkg-version">^10.24</div>
+        <div class="pkg-desc">Full-text search abstraction layer for Eloquent models. Enables <code style="font-family:monospace;color:var(--red)">Product::search($term)</code> on the homepage. Works with a driver (here: TNTSearch) and supports pagination of results.</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">teamtnt/laravel-scout-tntsearch-driver</div>
+        <div class="pkg-version">^15.0</div>
+        <div class="pkg-desc">Local full-text search engine driver for Laravel Scout. Indexes model data into SQLite-based indexes stored in <code style="font-family:monospace;color:var(--red)">storage/tntsearch/</code>. No external server needed — runs entirely offline.</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">consoletvs/charts</div>
+        <div class="pkg-version">^6.8</div>
+        <div class="pkg-desc">Chart.js integration for Laravel. Used in <code style="font-family:monospace;color:var(--red)">ReportController</code> to build bar, line, and pie chart objects that are passed to Blade views and rendered with JavaScript.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- MP1 -->
+  <!-- ============================================================ -->
+  <div id="mp1">
+    <div class="section-label">Machine Project 1 — 20pts</div>
+    <div class="section-title">Product / Service CRUD <span class="badge">MP1</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP1</span>
+          <span class="mp-title">Product/Service CRUD + Restore + Photos + Excel Import</span>
+        </div>
+        <span class="mp-pts">20 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <!-- Admin ProductController -->
+        <div class="sub-section">
+          <div class="sub-title">Admin Product Controller (CRUD + Datatable + Restore + Import)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/ProductController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-blue">CRUD</span>
+              <span class="tag tag-orange">DataTable</span>
+            </div>
+            <div class="file-body">
+              <div class="file-purpose">This is the main admin controller handling all product operations. It ties together the DataTable display, soft-delete restore, photo upload, and Excel import into one class.</div>
+
+              <div class="explain-item">
+                <div class="explain-label">constructor() — Lines 1–20</div>
+                <div class="code-block"><div class="code-line-ref">Lines 16–20</div><code><span class="kw">public function</span> <span class="fn">__construct</span>()
+{
+    $this->middleware(<span class="str">'auth'</span>);
+    $this->middleware(<span class="str">'verified'</span>);
+    $this->middleware(<span class="str">'admin'</span>);
+}</code></div>
+                <div class="explain-text">Applies three middleware guards to every method in this controller. <strong>auth</strong> requires the user to be logged in, <strong>verified</strong> requires their email to be confirmed, and <strong>admin</strong> is a custom middleware (EnsureUserIsAdmin) that checks the user's role is 'admin'. This is how admin routes are protected from regular customers.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">index() — DataTable with Soft-Deleted Products</div>
+                <div class="code-block"><div class="code-line-ref">Lines 22–53</div><code><span class="kw">public function</span> <span class="fn">index</span>(Request $request)
+{
+    <span class="kw">if</span> ($request->ajax()) {
+        $query = Product::<span class="fn">withTrashed</span>(); <span class="cmt">// includes soft-deleted rows</span>
+        <span class="kw">return</span> DataTables::<span class="fn">eloquent</span>($query)
+            -><span class="fn">addColumn</span>(<span class="str">'image'</span>, <span class="fn">fn</span>(Product $p) => <span class="str">'&lt;img src="...'</span>)
+            -><span class="fn">editColumn</span>(<span class="str">'price'</span>, <span class="fn">fn</span>(Product $p) => <span class="str">'₱'</span> . number_format($p->price, 2))
+            -><span class="fn">addColumn</span>(<span class="str">'actions'</span>, <span class="kw">function</span>(Product $p) {
+                <span class="kw">if</span> ($p-><span class="fn">trashed</span>()) {
+                    <span class="kw">return</span> <span class="str">'&lt;form ...&gt;Restore&lt;/form&gt;'</span>;
+                }
+                <span class="kw">return</span> <span class="str">'Edit | Delete buttons ...'</span>;
+            })
+            -><span class="fn">rawColumns</span>([<span class="str">'image'</span>, <span class="str">'actions'</span>])
+            -><span class="fn">toJson</span>();
+    }
+    <span class="kw">return</span> <span class="fn">view</span>(<span class="str">'admin.products.index'</span>);
+}</code></div>
+                <div class="explain-text"><strong>DataTables::eloquent($query)</strong> — Passes an Eloquent query to Yajra DataTables which handles server-side filtering/sorting/pagination automatically. <strong>withTrashed()</strong> includes soft-deleted products so they appear in the list with a "Restore" button. <strong>addColumn()</strong> adds computed columns not in the DB (image thumbnail, action buttons). <strong>rawColumns()</strong> tells DataTables to render the HTML strings as real HTML, not escaped text. <strong>toJson()</strong> returns the JSON response that the DataTable JS widget consumes.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">store() — Create Product with Single Photo Upload</div>
+                <div class="code-block"><div class="code-line-ref">Lines 55–68</div><code><span class="kw">if</span> ($request-><span class="fn">hasFile</span>(<span class="str">'image'</span>)) {
+    $data[<span class="str">'image_url'</span>] = $request-><span class="fn">file</span>(<span class="str">'image'</span>)
+        -><span class="fn">store</span>(<span class="str">'products'</span>, <span class="str">'public'</span>);
+}
+$product = Product::<span class="fn">create</span>($data);
+$product-><span class="fn">updateStatus</span>();</code></div>
+                <div class="explain-text"><strong>hasFile('image')</strong> checks if a file was uploaded. <strong>store('products', 'public')</strong> saves the image to <code>storage/app/public/products/</code> and returns the relative path stored in the database. <strong>updateStatus()</strong> is a model method that sets the product status (In Stock / Low Stock / Out of Stock) based on stock_quantity.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">restore() — Soft Delete Restore</div>
+                <div class="code-block"><div class="code-line-ref">Lines 86–91</div><code><span class="kw">public function</span> <span class="fn">restore</span>(int $id)
+{
+    $product = Product::<span class="fn">withTrashed</span>()-><span class="fn">findOrFail</span>($id);
+    $product-><span class="fn">restore</span>();
+    <span class="kw">return</span> redirect()-><span class="fn">route</span>(<span class="str">'admin.products.index'</span>)-><span class="fn">with</span>(<span class="str">'success'</span>, <span class="str">'Product restored.'</span>);
+}</code></div>
+                <div class="explain-text">Because the Product model uses the <strong>SoftDeletes</strong> trait, <code>delete()</code> only sets a <code>deleted_at</code> timestamp. This method uses <code>withTrashed()</code> to find that record and <code>restore()</code> to clear the timestamp, bringing it back to active.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">import() — Excel Import</div>
+                <div class="code-block"><div class="code-line-ref">Lines 93–104</div><code><span class="kw">public function</span> <span class="fn">import</span>(Request $request)
+{
+    $request-><span class="fn">validate</span>([
+        <span class="str">'file'</span> => <span class="str">'required|file|mimes:xlsx,xls,csv|max:5120'</span>,
+    ]);
+    Excel::<span class="fn">import</span>(<span class="kw">new</span> ProductsImport, $request-><span class="fn">file</span>(<span class="str">'file'</span>));
+    <span class="kw">return</span> back()-><span class="fn">with</span>(<span class="str">'success'</span>, <span class="str">'Products imported.'</span>);
+}</code></div>
+                <div class="explain-text"><strong>Excel::import()</strong> is the Maatwebsite/Excel facade. It takes a class that implements import contracts (ProductsImport) and the uploaded file. The import class handles reading rows, validating data, and creating/updating Product models.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ProductsImport -->
+        <div class="sub-section">
+          <div class="sub-title">Excel Import Class</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Imports/ProductsImport.php</span>
+              <span class="tag tag-orange">Excel Import</span>
+              <span class="tag tag-blue">Maatwebsite</span>
+            </div>
+            <div class="file-body">
+              <div class="file-purpose">Implements the full logic for reading Excel rows and inserting/updating Product records. Supports batch reading for performance and column-header mapping.</div>
+
+              <div class="explain-item">
+                <div class="explain-label">Implemented Interfaces</div>
+                <div class="code-block"><code><span class="kw">class</span> ProductsImport <span class="kw">implements</span>
+    ToModel,          <span class="cmt">// calls model() for each row</span>
+    WithHeadingRow,   <span class="cmt">// uses row 1 as column name keys</span>
+    WithValidation,   <span class="cmt">// validates each row with rules()</span>
+    WithChunkReading, <span class="cmt">// reads in chunks of 200 rows</span>
+    WithBatchInserts  <span class="cmt">// inserts 200 records at a time</span></code></div>
+                <div class="explain-text"><strong>ToModel</strong> — maps each spreadsheet row to a Laravel model. <strong>WithHeadingRow</strong> — makes column names available as <code>$row['name']</code> etc. instead of numeric indices. <strong>WithChunkReading + WithBatchInserts</strong> — reads and inserts in chunks of 200, preventing memory exhaustion with large files. <strong>WithValidation</strong> — validates data before model creation.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">model() — Upsert Logic</div>
+                <div class="code-block"><code>$existing = Product::<span class="fn">withTrashed</span>()
+    -><span class="fn">where</span>(<span class="str">'sku'</span>, $sku)-><span class="fn">first</span>();
+<span class="kw">if</span> ($existing) {
+    $existing-><span class="fn">fill</span>($data)-><span class="fn">save</span>(); <span class="cmt">// UPDATE</span>
+    $this-><span class="fn">processAdditionalImages</span>($existing, ...);
+    <span class="kw">return null</span>;
+}
+<span class="kw">return new</span> <span class="fn">Product</span>([...]); <span class="cmt">// INSERT</span></code></div>
+                <div class="explain-text">Checks if a product with the same SKU already exists (even if soft-deleted). If yes, updates it. If no, creates a new one. <strong>processAdditionalImages()</strong> reads a comma-separated "additional_images" column and stores each one as a ProductPhoto record.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Photos Controller -->
+        <div class="sub-section">
+          <div class="sub-title">Multiple Photos Upload &amp; Management</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/ProductPhotoController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-purple">Multi-Photo</span>
+            </div>
+            <div class="file-body">
+              <div class="file-purpose">Manages the gallery of multiple product photos: uploading multiple files at once, deleting individual photos, and setting a primary photo that shows as the product thumbnail.</div>
+
+              <div class="explain-item">
+                <div class="explain-label">store() — Upload Multiple Photos</div>
+                <div class="code-block"><code>$request-><span class="fn">validate</span>([
+    <span class="str">'photos'</span> => <span class="str">'required|array'</span>,
+    <span class="str">'photos.*'</span> => <span class="str">'image|mimes:jpeg,png,jpg,gif,webp|max:2048'</span>,
+]);
+<span class="kw">foreach</span> ($request-><span class="fn">file</span>(<span class="str">'photos'</span>) <span class="kw">as</span> $file) {
+    $path = $file-><span class="fn">store</span>(<span class="str">'products'</span>, <span class="str">'public'</span>);
+    $product->productPhotos()-><span class="fn">create</span>([
+        <span class="str">'photo_url'</span> => $path,
+        <span class="str">'is_primary'</span> => <span class="kw">false</span>,
+        <span class="str">'display_order'</span> => ++$maxOrder,
+    ]);
+}</code></div>
+                <div class="explain-text">The input name <code>photos[]</code> in the form allows multiple files. Laravel receives them as an array. The <code>photos.*</code> rule validates each individual file. Each file is stored and a ProductPhoto record is created with its path, linked to the product via <code>product_id</code>.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">setPrimary() — Set Primary Thumbnail</div>
+                <div class="code-block"><code>$product->productPhotos()-><span class="fn">update</span>([<span class="str">'is_primary'</span> => <span class="kw">false</span>]);
+$photo-><span class="fn">update</span>([<span class="str">'is_primary'</span> => <span class="kw">true</span>]);</code></div>
+                <div class="explain-text">First resets ALL photos of this product to <code>is_primary = false</code>, then sets the selected photo to true. The <code>getPhotoUrlAttribute()</code> on the Product model uses this flag to serve the correct thumbnail.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Model -->
+        <div class="sub-section">
+          <div class="sub-title">Product Model</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Models/Product.php</span>
+              <span class="tag tag-purple">Model</span>
+              <span class="tag tag-blue">SoftDeletes</span>
+              <span class="tag tag-green">Searchable</span>
+            </div>
+            <div class="file-body">
+              <div class="file-purpose">The central Eloquent model for products. Implements soft deletes, Laravel Scout searchability, status auto-calculation, and the photo URL resolution logic.</div>
+
+              <div class="explain-item">
+                <div class="explain-label">Traits Used</div>
+                <div class="code-block"><code><span class="kw">use</span> HasFactory, SoftDeletes, Searchable;</code></div>
+                <div class="explain-text"><strong>SoftDeletes</strong> — adds <code>deleted_at</code> column support so <code>delete()</code> doesn't permanently remove the row. <strong>Searchable</strong> — from Laravel Scout; lets this model be indexed and searched via <code>Product::search()</code>.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">getPhotoUrlAttribute() — Smart Thumbnail Resolution</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">getPhotoUrlAttribute</span>(): string
+{
+    $primary = $this->productPhotos()
+        -><span class="fn">where</span>(<span class="str">'is_primary'</span>, <span class="kw">true</span>)-><span class="fn">first</span>();
+    <span class="kw">if</span> ($primary) <span class="kw">return</span> $primary->url;     <span class="cmt">// 1. gallery primary</span>
+    <span class="kw">if</span> ($this->image_url) <span class="kw">return</span> ...;        <span class="cmt">// 2. main image_url</span>
+    <span class="kw">return</span> <span class="str">'https://ui-avatars.com/...'</span>;    <span class="cmt">// 3. placeholder</span>
+}</code></div>
+                <div class="explain-text">An Eloquent accessor (a computed property). Accessed via <code>$product->photo_url</code> in Blade. It tries to find a primary gallery photo first, then falls back to the main image, then to a generated placeholder avatar — a 3-tier fallback system.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">updateStatus() — Auto Stock Status</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">updateStatus</span>(): <span class="kw">void</span>
+{
+    <span class="kw">if</span> ($this->stock_quantity > <span class="num">10</span>)      $this-><span class="fn">update</span>([<span class="str">'status'</span> => <span class="str">'In Stock'</span>]);
+    <span class="kw">elseif</span> ($this->stock_quantity > <span class="num">0</span>)    $this-><span class="fn">update</span>([<span class="str">'status'</span> => <span class="str">'Low Stock'</span>]);
+    <span class="kw">else</span>                                  $this-><span class="fn">update</span>([<span class="str">'status'</span> => <span class="str">'Out of Stock'</span>]);
+}</code></div>
+                <div class="explain-text">Called after every create/update/import. Automatically derives the product's status from its stock count, ensuring the status column is always consistent with real inventory.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">toSearchableArray() — Scout Index Definition</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">toSearchableArray</span>(): array
+{
+    <span class="kw">return</span> [
+        <span class="str">'id'</span> => $this->id,
+        <span class="str">'name'</span> => $this->name,
+        <span class="str">'series'</span> => $this->series,
+        <span class="str">'brand'</span> => $this->brand,
+        <span class="str">'description'</span> => $this->description,
+        ...
+    ];
+}</code></div>
+                <div class="explain-text">Defines which fields TNTSearch indexes for full-text searching. When <code>php artisan scout:import "App\Models\Product"</code> is run, TNTSearch reads these arrays and builds its search index from them.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Routes -->
+        <div class="sub-section">
+          <div class="sub-title">Routes for MP1</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">routes/web.php</span>
+              <span class="tag tag-blue">Routes</span>
+            </div>
+            <div class="file-body">
+              <div class="code-block"><code>Route::<span class="fn">resource</span>(<span class="str">'products'</span>, AdminProductController::class);
+Route::<span class="fn">post</span>(<span class="str">'/products/{id}/restore'</span>, [AdminProductController::class, <span class="str">'restore'</span>])-><span class="fn">name</span>(<span class="str">'admin.products.restore'</span>);
+Route::<span class="fn">post</span>(<span class="str">'/products/import'</span>, [AdminProductController::class, <span class="str">'import'</span>])-><span class="fn">name</span>(<span class="str">'admin.products.import'</span>);
+Route::<span class="fn">post</span>(<span class="str">'/products/{product}/photos'</span>, [AdminProductPhotoController::class, <span class="str">'store'</span>])-><span class="fn">name</span>(<span class="str">'admin.products.photos.store'</span>);
+Route::<span class="fn">post</span>(<span class="str">'/products/{product}/photos/{photo}/primary'</span>, ...)-><span class="fn">name</span>(<span class="str">'admin.products.photos.primary'</span>);</code></div>
+              <div class="explain-text"><strong>Route::resource()</strong> automatically creates 7 RESTful routes: index, create, store, show, edit, update, destroy. Additional non-resourceful routes are added manually for restore, import, and photo management.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP2 -->
+  <!-- ============================================================ -->
+  <div id="mp2">
+    <div class="section-label">Machine Project 2 — 20pts</div>
+    <div class="section-title">User CRUD <span class="badge">MP2</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP2</span>
+          <span class="mp-title">User Registration, Profile, Datatable, Status &amp; Role Management</span>
+        </div>
+        <span class="mp-pts">20 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">User Registration with Photo (RegisterController)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Auth/RegisterController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-blue">Registration</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">register() — Validated Registration + Photo Upload</div>
+                <div class="code-block"><code>$validated = $request-><span class="fn">validate</span>([
+    <span class="str">'username'</span>      => <span class="str">'required|string|max:255|unique:users,username'</span>,
+    <span class="str">'email'</span>         => <span class="str">'required|string|email|max:255|unique:users,email'</span>,
+    <span class="str">'password'</span>      => [<span class="str">'required'</span>, <span class="str">'confirmed'</span>, Password::<span class="fn">defaults</span>()],
+    <span class="str">'profile_photo'</span> => <span class="str">'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'</span>,
+]);
+
+<span class="kw">if</span> ($request-><span class="fn">hasFile</span>(<span class="str">'profile_photo'</span>)) {
+    $validated[<span class="str">'profile_photo'</span>] = $request-><span class="fn">file</span>(<span class="str">'profile_photo'</span>)
+        -><span class="fn">store</span>(<span class="str">'profiles'</span>, <span class="str">'public'</span>);
+}
+
+$user = User::<span class="fn">create</span>($validated);
+<span class="fn">event</span>(<span class="kw">new</span> Registered($user)); <span class="cmt">// triggers email verification</span>
+<span class="kw">return</span> redirect()-><span class="fn">route</span>(<span class="str">'login'</span>)-><span class="fn">with</span>(<span class="str">'success'</span>, <span class="str">'Check your email.'</span>);</code></div>
+                <div class="explain-text"><strong>Password::defaults()</strong> — applies Laravel's default password strength rules (min 8 chars). <strong>'confirmed'</strong> rule — automatically checks that a matching <code>password_confirmation</code> field exists. <strong>event(new Registered($user))</strong> — fires the Registered event which triggers the email verification notification (custom or default). The user is redirected to login (NOT logged in), because verification is required first.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">User Profile Update with Photo (ProfileController)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/ProfileController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-purple">Profile</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">update() — Replace old photo, store new one</div>
+                <div class="code-block"><code><span class="kw">if</span> ($request-><span class="fn">hasFile</span>(<span class="str">'profile_photo'</span>)) {
+    <span class="kw">if</span> ($user->profile_photo) {
+        Storage::<span class="fn">disk</span>(<span class="str">'public'</span>)-><span class="fn">delete</span>($user->profile_photo); <span class="cmt">// remove old file</span>
+    }
+    $validated[<span class="str">'profile_photo'</span>] = $request-><span class="fn">file</span>(<span class="str">'profile_photo'</span>)
+        -><span class="fn">store</span>(<span class="str">'profiles'</span>, <span class="str">'public'</span>);
+}</code></div>
+                <div class="explain-text">Before uploading a new photo, the old one is deleted from disk using <code>Storage::disk('public')->delete()</code> to avoid orphan files accumulating in storage. Password change uses <code>current_password</code> rule (validates against the user's existing hash) before allowing the new password to be set.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Admin User Datatable + Status Toggle + Role Update</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/UserController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-orange">DataTable</span>
+              <span class="tag tag-red">Admin</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">index() — DataTable for Users</div>
+                <div class="code-block"><code>$query = User::<span class="fn">query</span>()-><span class="fn">withCount</span>(<span class="str">'orders'</span>);
+<span class="kw">return</span> DataTables::<span class="fn">eloquent</span>($query)
+    -><span class="fn">addColumn</span>(<span class="str">'actions'</span>, <span class="kw">function</span>(User $u) {
+        <span class="cmt">// View, Update, Activate/Deactivate, Delete buttons</span>
+    })-><span class="fn">toJson</span>();</code></div>
+                <div class="explain-text"><strong>withCount('orders')</strong> — eager loads a count of related orders for each user without a separate query, adding an <code>orders_count</code> attribute. This gives the admin visibility into customer purchase activity in the table.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">update() — Role Management</div>
+                <div class="code-block"><code>$validated = $request-><span class="fn">validate</span>([
+    <span class="str">'role'</span> => <span class="str">'required|in:customer,admin'</span>,
+    <span class="str">'username'</span> => [<span class="str">'required'</span>, Rule::<span class="fn">unique</span>(<span class="str">'users'</span>, <span class="str">'username'</span>)-><span class="fn">ignore</span>($user->id)],
+    ...
+]);
+$user-><span class="fn">update</span>($validated);</code></div>
+                <div class="explain-text"><strong>Rule::unique()->ignore($user->id)</strong> — allows the user to keep their own username/email without triggering a unique constraint violation. The <strong>'role'</strong> field accepts only 'customer' or 'admin', letting the admin promote/demote users.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">toggleActive() — Activate / Deactivate User</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">toggleActive</span>(User $user)
+{
+    $user-><span class="fn">update</span>([<span class="str">'is_active'</span> => ! $user->is_active]);
+    $message = $user->is_active ? <span class="str">'User activated.'</span> : <span class="str">'User deactivated.'</span>;
+    <span class="kw">return</span> back()-><span class="fn">with</span>(<span class="str">'success'</span>, $message);
+}</code></div>
+                <div class="explain-text">A toggle: flips the boolean <code>is_active</code> field using the NOT operator. The LoginController also checks this flag — inactive users cannot log in even with valid credentials.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">User Model</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Models/User.php</span>
+              <span class="tag tag-purple">Model</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">Key Model Features</div>
+                <div class="code-block"><code><span class="kw">class</span> User <span class="kw">extends</span> Authenticatable <span class="kw">implements</span> MustVerifyEmail
+{
+    <span class="kw">use</span> HasFactory, Notifiable;
+
+    <span class="kw">public function</span> <span class="fn">sendEmailVerificationNotification</span>()
+    {
+        $this-><span class="fn">notify</span>(<span class="kw">new</span> VerifyEmailCustom); <span class="cmt">// custom email template</span>
+    }
+
+    <span class="kw">public function</span> <span class="fn">isAdmin</span>(): bool
+    {
+        <span class="kw">return</span> $this->role === <span class="str">'admin'</span>;
+    }
+}</code></div>
+                <div class="explain-text"><strong>implements MustVerifyEmail</strong> — signals to Laravel that this model requires email verification before certain routes work. <strong>sendEmailVerificationNotification()</strong> — overrides the default notification to use a custom Blade email template. <strong>isAdmin()</strong> — a helper used in Form Requests to authorize admin-only actions.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP3 -->
+  <!-- ============================================================ -->
+  <div id="mp3">
+    <div class="section-label">Machine Project 3 — 20pts</div>
+    <div class="section-title">Authentication <span class="badge">MP3</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP3</span>
+          <span class="mp-title">Login, Email Verification, Route Protection</span>
+        </div>
+        <span class="mp-pts">20 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Login with Email Verification Check (LoginController)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Auth/LoginController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-red">Auth</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">login() — Full Authentication Flow</div>
+                <div class="code-block"><code><span class="kw">if</span> (! Auth::<span class="fn">attempt</span>($credentials, $remember)) {
+    <span class="kw">throw</span> ValidationException::<span class="fn">withMessages</span>([...]);
+}
+$request->session()-><span class="fn">regenerate</span>(); <span class="cmt">// prevent session fixation</span>
+
+<span class="kw">if</span> (! $request-><span class="fn">user</span>()-><span class="fn">hasVerifiedEmail</span>()) {
+    Auth::<span class="fn">logout</span>();
+    <span class="kw">return</span> redirect()-><span class="fn">route</span>(<span class="str">'login'</span>)-><span class="fn">with</span>(<span class="str">'error'</span>, <span class="str">'Verify your email first.'</span>);
+}
+<span class="kw">if</span> (! $request-><span class="fn">user</span>()->is_active) {
+    Auth::<span class="fn">logout</span>();
+    <span class="kw">return</span> redirect()-><span class="fn">route</span>(<span class="str">'login'</span>)-><span class="fn">with</span>(<span class="str">'error'</span>, <span class="str">'Account deactivated.'</span>);
+}</code></div>
+                <div class="explain-text"><strong>Auth::attempt()</strong> — checks credentials against the database. <strong>session()->regenerate()</strong> — generates a new session ID to prevent session fixation attacks. Then two extra checks: (1) <strong>hasVerifiedEmail()</strong> — only verified users proceed; (2) <strong>is_active</strong> — only active accounts can log in. Failed checks log the user out immediately.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Custom Email Verification Notification</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Notifications/VerifyEmailCustom.php</span>
+              <span class="tag tag-blue">Notification</span>
+              <span class="tag tag-purple">Email</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">toMail() — Custom Template</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">toMail</span>($notifiable)
+{
+    $verificationUrl = $this-><span class="fn">verificationUrl</span>($notifiable);
+    <span class="kw">return</span> (<span class="kw">new</span> MailMessage)
+        -><span class="fn">subject</span>(<span class="str">'Verify Email Address'</span>)
+        -><span class="fn">view</span>(<span class="str">'emails.verify-email'</span>, [
+            <span class="str">'url'</span>  => $verificationUrl,
+            <span class="str">'name'</span> => $notifiable->name ?? $notifiable->username,
+        ]);
+}</code></div>
+                <div class="explain-text">Extends Laravel's built-in <code>VerifyEmail</code> notification but overrides <code>toMail()</code> to use a custom Blade template instead of the default one. <strong>verificationUrl()</strong> generates a signed URL containing the user ID and a hash of their email, which is checked when they click the link.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Email Verification Route (Signed URL Handler)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">routes/web.php</span>
+              <span class="tag tag-blue">Route</span>
+            </div>
+            <div class="file-body">
+              <div class="code-block"><code>Route::<span class="fn">get</span>(<span class="str">'/email/verify/{id}/{hash}'</span>, <span class="kw">function</span>($id, $hash) {
+    $user = User::<span class="fn">findOrFail</span>($id);
+    <span class="kw">if</span> (! hash_equals((string) $hash, sha1($user-><span class="fn">getEmailForVerification</span>())))
+        abort(<span class="num">403</span>);
+    <span class="kw">if</span> ($user-><span class="fn">markEmailAsVerified</span>()) {
+        <span class="fn">event</span>(<span class="kw">new</span> Verified($user));
+    }
+    <span class="kw">return</span> redirect()-><span class="fn">route</span>(<span class="str">'login'</span>)-><span class="fn">with</span>(<span class="str">'success'</span>, <span class="str">'Email verified!'</span>);
+})-><span class="fn">middleware</span>([<span class="str">'signed'</span>, <span class="str">'throttle:6,1'</span>])-><span class="fn">name</span>(<span class="str">'verification.verify'</span>);</code></div>
+                <div class="explain-text"><strong>'signed' middleware</strong> — verifies the URL hasn't been tampered with (it contains a cryptographic signature). <strong>hash_equals()</strong> — constant-time string comparison to prevent timing attacks. <strong>throttle:6,1</strong> — limits to 6 verification attempts per minute. <strong>markEmailAsVerified()</strong> — sets <code>email_verified_at</code> timestamp.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Admin Middleware — Route Protection</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Middleware/EnsureUserIsAdmin.php</span>
+              <span class="tag tag-red">Middleware</span>
+            </div>
+            <div class="file-body">
+              <div class="code-block"><code><span class="kw">public function</span> <span class="fn">handle</span>(Request $request, Closure $next): Response
+{
+    <span class="kw">if</span> (! $request-><span class="fn">user</span>() || $request-><span class="fn">user</span>()->role !== <span class="str">'admin'</span>) {
+        abort(<span class="num">403</span>, <span class="str">'Access denied. Admin privileges required.'</span>);
+    }
+    <span class="kw">return</span> $next($request);
+}</code></div>
+              <div class="explain-text">Custom middleware registered as <code>'admin'</code> alias. Applied to all <code>/admin/*</code> routes via the route group in web.php. If a non-admin user somehow reaches an admin URL, they receive a 403 Forbidden response. This combined with <code>auth</code> and <code>verified</code> middleware creates a 3-layer protection.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Protected Route Groups</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">routes/web.php</span>
+              <span class="tag tag-blue">Route Groups</span>
+            </div>
+            <div class="file-body">
+              <div class="code-block"><code><span class="cmt">// Customer-protected routes</span>
+Route::<span class="fn">middleware</span>([<span class="str">'auth'</span>, <span class="str">'verified'</span>])-><span class="fn">group</span>(<span class="kw">function</span>() {
+    <span class="cmt">// cart, checkout, orders, reviews, profile</span>
+});
+
+<span class="cmt">// Admin-only routes (also require auth + verified)</span>
+Route::<span class="fn">middleware</span>([<span class="str">'auth'</span>, <span class="str">'verified'</span>, <span class="str">'admin'</span>])
+    -><span class="fn">prefix</span>(<span class="str">'admin'</span>)
+    -><span class="fn">name</span>(<span class="str">'admin.'</span>)
+    -><span class="fn">group</span>(<span class="kw">function</span>() {
+        <span class="cmt">// all admin controllers</span>
+    });</code></div>
+              <div class="explain-text">Route groups apply middleware to multiple routes at once. The admin group also uses <code>prefix('admin')</code> (makes all URLs start with /admin/) and <code>name('admin.')</code> (prefixes all route names with 'admin.' for naming consistency).</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP4 -->
+  <!-- ============================================================ -->
+  <div id="mp4">
+    <div class="section-label">Machine Project 4 — 20pts</div>
+    <div class="section-title">Product Reviews <span class="badge">MP4</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP4</span>
+          <span class="mp-title">Review CRUD — Post, Update, List, Admin Delete</span>
+        </div>
+        <span class="mp-pts">20 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Customer ReviewController (Post &amp; Update)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/ReviewController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-blue">Reviews</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">store() — Purchase Verification Before Review</div>
+                <div class="code-block"><code><span class="kw">if</span> (! $this-><span class="fn">canReview</span>(auth()->id(), $product->id)) {
+    <span class="kw">return</span> back()-><span class="fn">with</span>(<span class="str">'error'</span>, <span class="str">'You can only review products you purchased and received.'</span>);
+}</code></div>
+                <div class="explain-text">Before allowing a review, the system checks if the authenticated user has a completed order (status = 'Delivered') that contains this product. This prevents fake reviews from users who never bought the item.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">canReview() — Purchase Check Helper</div>
+                <div class="code-block"><code><span class="kw">protected function</span> <span class="fn">canReview</span>(int $userId, int $productId): bool
+{
+    <span class="kw">return</span> Order::<span class="fn">where</span>(<span class="str">'user_id'</span>, $userId)
+        -><span class="fn">where</span>(<span class="str">'status'</span>, <span class="str">'Delivered'</span>)
+        -><span class="fn">whereHas</span>(<span class="str">'orderItems'</span>, <span class="kw">fn</span>($q) => $q-><span class="fn">where</span>(<span class="str">'product_id'</span>, $productId))
+        -><span class="fn">exists</span>();
+}</code></div>
+                <div class="explain-text"><strong>whereHas()</strong> — adds a WHERE EXISTS subquery that checks the related orderItems table. Much more efficient than loading all orders and filtering in PHP. <strong>exists()</strong> — returns a boolean without loading any models, just runs a COUNT query.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">update() — Authorization Check</div>
+                <div class="code-block"><code><span class="kw">if</span> ($review->user_id !== auth()->id()) {
+    abort(<span class="num">403</span>); <span class="cmt">// only the author can edit their review</span>
+}</code></div>
+                <div class="explain-text">Manual ownership check. Prevents users from editing other people's reviews by submitting to a review ID they don't own. After the check, the updated text goes through <code>filterBadWords()</code> which replaces profanity with asterisks using regex.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Admin ReviewController (List + Delete)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/ReviewController.php</span>
+              <span class="tag tag-red">Admin</span>
+              <span class="tag tag-orange">DataTable</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">index() — DataTable with Eager Loading</div>
+                <div class="code-block"><code>$query = Review::<span class="fn">with</span>([<span class="str">'user'</span>, <span class="str">'product'</span>, <span class="str">'order'</span>]);
+<span class="kw">return</span> DataTables::<span class="fn">eloquent</span>($query)
+    -><span class="fn">addColumn</span>(<span class="str">'user_name'</span>, <span class="fn">fn</span>(Review $r) => $r->user->full_name)
+    -><span class="fn">addColumn</span>(<span class="str">'product_name'</span>, <span class="fn">fn</span>(Review $r) => $r->product->name)
+    -><span class="fn">toJson</span>();</code></div>
+                <div class="explain-text"><strong>with(['user', 'product', 'order'])</strong> — eager loads all three relations in a single query to avoid the N+1 query problem. Without this, each row in the DataTable would execute separate queries for user/product/order names.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">destroy() — Admin Review Deletion</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">destroy</span>(Review $review)
+{
+    $review-><span class="fn">delete</span>();
+    <span class="kw">return</span> back()-><span class="fn">with</span>(<span class="str">'success'</span>, <span class="str">'Review deleted.'</span>);
+}</code></div>
+                <div class="explain-text">Simple model deletion. Only accessible to admins via the middleware chain on the admin route group. Customers cannot reach this endpoint.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP5 -->
+  <!-- ============================================================ -->
+  <div id="mp5">
+    <div class="section-label">Machine Project 5 — 15pts</div>
+    <div class="section-title">Form Validation <span class="badge">MP5</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP5</span>
+          <span class="mp-title">Product Form Requests + Registration Validation</span>
+        </div>
+        <span class="mp-pts">15 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">StoreProductRequest (Create Validation)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Requests/StoreProductRequest.php</span>
+              <span class="tag tag-blue">Form Request</span>
+              <span class="tag tag-green">Validation</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">authorize() + rules()</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">authorize</span>(): bool
+{
+    <span class="kw">return</span> $this-><span class="fn">user</span>()?-><span class="fn">isAdmin</span>() ?? <span class="kw">false</span>;
+}
+
+<span class="kw">public function</span> <span class="fn">rules</span>(): array
+{
+    <span class="kw">return</span> [
+        <span class="str">'name'</span>           => <span class="str">'required|string|max:255'</span>,
+        <span class="str">'price'</span>          => <span class="str">'required|numeric|min:0'</span>,
+        <span class="str">'sku'</span>            => <span class="str">'required|string|max:100|unique:products,sku'</span>,
+        <span class="str">'stock_quantity'</span> => <span class="str">'required|integer|min:0'</span>,
+        <span class="str">'image'</span>          => <span class="str">'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'</span>,
+    ];
+}</code></div>
+                <div class="explain-text"><strong>Form Request</strong> — a dedicated class that separates validation from the controller, keeping controllers thin. <strong>authorize()</strong> — a second authorization layer; returns false = 403 error. <strong>unique:products,sku</strong> — database-level uniqueness validation. <strong>image|mimes:</strong> — validates the file type for uploads. <strong>max:2048</strong> — limits upload to 2MB.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">UpdateProductRequest (Edit Validation)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Requests/UpdateProductRequest.php</span>
+              <span class="tag tag-blue">Form Request</span>
+              <span class="tag tag-green">Validation</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">SKU Unique Rule with Ignore</div>
+                <div class="code-block"><code><span class="str">'sku'</span> => [
+    <span class="str">'required'</span>, <span class="str">'string'</span>, <span class="str">'max:100'</span>,
+    Rule::<span class="fn">unique</span>(<span class="str">'products'</span>, <span class="str">'sku'</span>)-><span class="fn">ignore</span>($this-><span class="fn">route</span>(<span class="str">'product'</span>)),
+],</code></div>
+                <div class="explain-text"><strong>Rule::unique()->ignore()</strong> — critical for edit forms. Without this, updating a product would always fail the uniqueness check because its own SKU is already in the database. The <code>ignore()</code> method excludes the current product's ID from the uniqueness check.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Registration Validation</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Auth/RegisterController.php</span>
+              <span class="tag tag-blue">Inline Validation</span>
+            </div>
+            <div class="file-body">
+              <div class="code-block"><code><span class="str">'username'</span> => <span class="str">'required|string|max:255|unique:users,username'</span>,
+<span class="str">'email'</span>    => <span class="str">'required|string|email|max:255|unique:users,email'</span>,
+<span class="str">'password'</span> => [<span class="str">'required'</span>, <span class="str">'confirmed'</span>, Password::<span class="fn">defaults</span>()],
+<span class="str">'phone'</span>    => <span class="str">'nullable|string|max:50'</span>,
+<span class="str">'address'</span>  => <span class="str">'nullable|string'</span>,</code></div>
+              <div class="explain-text"><strong>Password::defaults()</strong> — enforces Laravel's recommended password policy (min length, complexity). <strong>'confirmed'</strong> — automatically checks for a <code>password_confirmation</code> field match. <strong>unique:users,email</strong> — ensures no duplicate emails in the users table.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP6 -->
+  <!-- ============================================================ -->
+  <div id="mp6">
+    <div class="section-label">Machine Project 6 — 15pts</div>
+    <div class="section-title">Product Filtering <span class="badge">MP6</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP6</span>
+          <span class="mp-title">Filter by Price + Category/Brand/Type</span>
+        </div>
+        <span class="mp-pts">15 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Customer-Facing Product Filter</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/ProductController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-blue">Filtering</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">index() — Chained Query Filters</div>
+                <div class="code-block"><code>$query = Product::<span class="fn">query</span>();
+
+<span class="kw">if</span> ($request-><span class="fn">filled</span>(<span class="str">'search'</span>)) {
+    $s = $request->search;
+    $query-><span class="fn">where</span>(<span class="kw">function</span>($q) use ($s) {
+        $q-><span class="fn">where</span>(<span class="str">'name'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>)
+          -><span class="fn">orWhere</span>(<span class="str">'brand'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>)
+          -><span class="fn">orWhere</span>(<span class="str">'description'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>);
+    });
+}
+<span class="kw">if</span> ($request-><span class="fn">filled</span>(<span class="str">'brand'</span>))     $query-><span class="fn">where</span>(<span class="str">'brand'</span>, $request->brand);
+<span class="kw">if</span> ($request-><span class="fn">filled</span>(<span class="str">'series'</span>))    $query-><span class="fn">where</span>(<span class="str">'series'</span>, $request->series);
+<span class="kw">if</span> ($request-><span class="fn">filled</span>(<span class="str">'type'</span>))      $query-><span class="fn">where</span>(<span class="str">'type'</span>, $request->type);
+<span class="kw">if</span> ($request-><span class="fn">filled</span>(<span class="str">'min_price'</span>)) $query-><span class="fn">where</span>(<span class="str">'price'</span>, <span class="str">'>='</span>, $request->min_price);
+<span class="kw">if</span> ($request-><span class="fn">filled</span>(<span class="str">'max_price'</span>)) $query-><span class="fn">where</span>(<span class="str">'price'</span>, <span class="str">'<='</span>, $request->max_price);</code></div>
+                <div class="explain-text"><strong>$request->filled()</strong> — only applies the filter if the query parameter is non-empty. This prevents empty filters from overriding all results. The approach chains all active filters onto one query object, resulting in a single, efficient SQL query. Price range uses <code>>=</code> and <code><=</code> operators for range filtering. Brand/series/type use exact-match WHERE clauses.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">Sorting + Pagination</div>
+                <div class="code-block"><code><span class="fn">match</span> ($sort) {
+    <span class="str">'price_asc'</span>  => $query-><span class="fn">orderBy</span>(<span class="str">'price'</span>),
+    <span class="str">'price_desc'</span> => $query-><span class="fn">orderByDesc</span>(<span class="str">'price'</span>),
+    <span class="str">'name'</span>       => $query-><span class="fn">orderBy</span>(<span class="str">'name'</span>),
+    default      => $query-><span class="fn">orderByDesc</span>(<span class="str">'created_at'</span>),
+};
+$products = $query-><span class="fn">paginate</span>(<span class="num">12</span>);</code></div>
+                <div class="explain-text">PHP 8's <strong>match expression</strong> is used for clean sorting logic. <strong>paginate(12)</strong> handles result pagination while preserving current query parameters in page links.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">Filter Options Population</div>
+                <div class="code-block"><code>$brands = Product::<span class="fn">select</span>(<span class="str">'brand'</span>)-><span class="fn">distinct</span>()-><span class="fn">orderBy</span>(<span class="str">'brand'</span>)-><span class="fn">pluck</span>(<span class="str">'brand'</span>);
+$series = Product::<span class="fn">select</span>(<span class="str">'series'</span>)-><span class="fn">distinct</span>()-><span class="fn">pluck</span>(<span class="str">'series'</span>);
+$types  = Product::<span class="fn">select</span>(<span class="str">'type'</span>)-><span class="fn">distinct</span>()-><span class="fn">whereNotNull</span>(<span class="str">'type'</span>)-><span class="fn">pluck</span>(<span class="str">'type'</span>);</code></div>
+                <div class="explain-text">Dynamically populates dropdown filter options from actual database values. <strong>distinct()</strong> removes duplicates. <strong>pluck()</strong> returns a flat array of values (not full model objects), efficient for populating select lists.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP7 -->
+  <!-- ============================================================ -->
+  <div id="mp7">
+    <div class="section-label">Machine Project 7 — 15pts</div>
+    <div class="section-title">Charts &amp; Reports <span class="badge">MP7</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP7</span>
+          <span class="mp-title">Yearly Sales Chart, Bar Chart (Date Range), Pie Chart by Product</span>
+        </div>
+        <span class="mp-pts">15 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Report Controller</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/ReportController.php</span>
+              <span class="tag tag-red">Admin</span>
+              <span class="tag tag-purple">Charts</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">Yearly Line Chart</div>
+                <div class="code-block"><code>$yearlySales = Order::<span class="fn">where</span>(<span class="str">'status'</span>, <span class="str">'!='</span>, <span class="str">'Cancelled'</span>)
+    -><span class="fn">whereYear</span>(<span class="str">'created_at'</span>, <span class="str">'>='</span>, now()-><span class="fn">subYears</span>(<span class="num">5</span>)->year)
+    -><span class="fn">get</span>()
+    -><span class="fn">groupBy</span>(<span class="fn">fn</span>($o) => $o->created_at->year)
+    -><span class="fn">map</span>(<span class="fn">fn</span>($group) => $group-><span class="fn">sum</span>(
+        <span class="fn">fn</span>($o) => $o->subtotal - (float) $o->discount_amount
+    ))->sortKeys();
+
+$yearlyChart = <span class="kw">new</span> Chart;
+$yearlyChart-><span class="fn">labels</span>($yearlySales->keys()-><span class="fn">toArray</span>());
+$yearlyChart-><span class="fn">dataset</span>(<span class="str">'Yearly Sales (₱)'</span>, <span class="str">'line'</span>, $yearlySales->values()-><span class="fn">toArray</span>())-><span class="fn">options</span>([...]);</code></div>
+                <div class="explain-text"><strong>groupBy(fn($o) => $o->created_at->year)</strong> — groups orders by year using Carbon's year property on the timestamp. <strong>map()->sum()</strong> — computes total revenue per year, subtracting discounts. <strong>ConsoleTVs Chart</strong> — creates a Chart.js dataset object passed to the view, which renders an interactive JavaScript chart.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">Bar Chart with Date Range Picker</div>
+                <div class="code-block"><code>$startDate = Carbon::<span class="fn">parse</span>($start)-><span class="fn">startOfDay</span>();
+$endDate   = Carbon::<span class="fn">parse</span>($end)-><span class="fn">endOfDay</span>();
+
+$salesByDate = $orders
+    -><span class="fn">groupBy</span>(<span class="fn">fn</span>($o) => $o->created_at-><span class="fn">format</span>(<span class="str">'Y-m-d'</span>))
+    -><span class="fn">map</span>(<span class="fn">fn</span>($group) => $group-><span class="fn">sum</span>(...));
+
+$barChart-><span class="fn">dataset</span>(<span class="str">'Sales (₱)'</span>, <span class="str">'bar'</span>, $salesByDate->values()-><span class="fn">toArray</span>());</code></div>
+                <div class="explain-text">The <code>start_date</code> and <code>end_date</code> query params come from a date picker in the view. <strong>Carbon::parse()->startOfDay()/endOfDay()</strong> ensures the full day is included. Results are grouped by day and plotted as a bar chart, showing revenue trend over the selected range.</div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-label">Pie Chart — Sales % by Product</div>
+                <div class="code-block"><code>$productSales = OrderItem::<span class="fn">whereHas</span>(<span class="str">'order'</span>, <span class="fn">fn</span>($q) =>
+        $q-><span class="fn">where</span>(<span class="str">'status'</span>, <span class="str">'!='</span>, <span class="str">'Cancelled'</span>)
+           -><span class="fn">whereBetween</span>(<span class="str">'created_at'</span>, [...])
+    )
+    -><span class="fn">selectRaw</span>(<span class="str">'product_id, sum(quantity * unit_price) as total'</span>)
+    -><span class="fn">groupBy</span>(<span class="str">'product_id'</span>)
+    -><span class="fn">with</span>(<span class="str">'product:id,name'</span>)
+    -><span class="fn">get</span>();
+
+$pieValues = $productSales-><span class="fn">map</span>(<span class="fn">fn</span>($i) =>
+    round($i->total / $totalSalesSum * 100, 2)
+)-><span class="fn">toArray</span>();</code></div>
+                <div class="explain-text"><strong>selectRaw()</strong> — runs a raw SQL aggregate (SUM of quantity × unit_price) per product. <strong>groupBy('product_id')</strong> — one row per product. Percentage is calculated by dividing each product's total by the grand total × 100. The pie chart then shows each product's share of total revenue.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MP8 -->
+  <!-- ============================================================ -->
+  <div id="mp8">
+    <div class="section-label">Machine Project 8 — 15pts</div>
+    <div class="section-title">Search <span class="badge">MP8</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MP8</span>
+          <span class="mp-title">LIKE Search → Model Scope Search → Laravel Scout + TNTSearch</span>
+        </div>
+        <span class="mp-pts">15 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Homepage Search — Laravel Scout with TNTSearch (15pts level)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/HomeController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-purple">Scout Search</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">index() — Scout Search with Pagination</div>
+                <div class="code-block"><code><span class="kw">if</span> ($search !== <span class="str">''</span>) {
+    <span class="cmt">// Laravel Scout Search (full-text, with result pagination)</span>
+    $products = Product::<span class="fn">search</span>($search)
+        -><span class="fn">query</span>(<span class="kw">function</span>($query) use ($brand) {
+            $query-><span class="fn">where</span>(<span class="str">'status'</span>, <span class="str">'!='</span>, <span class="str">'Out of Stock'</span>);
+            <span class="kw">if</span> ($brand !== <span class="str">''</span>) $query-><span class="fn">where</span>(<span class="str">'brand'</span>, $brand);
+        })
+        -><span class="fn">paginate</span>(<span class="num">8</span>);
+} <span class="kw">else</span> {
+    $products = Product::<span class="fn">where</span>(<span class="str">'status'</span>, <span class="str">'!='</span>, <span class="str">'Out of Stock'</span>)
+        -><span class="fn">orderByDesc</span>(<span class="str">'created_at'</span>)
+        -><span class="fn">paginate</span>(<span class="num">8</span>);
+}</code></div>
+                <div class="explain-text"><strong>Product::search($term)</strong> — Laravel Scout method that queries the TNTSearch index. TNTSearch stores a pre-built full-text index in <code>storage/tntsearch/</code> and ranks results by relevance. <strong>->query()</strong> applies additional Eloquent constraints on top of the Scout results (e.g., exclude out-of-stock). <strong>->paginate()</strong> returns a paginated result set with Scout-powered search, not a raw SQL LIKE query.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Model Scope Search (10pts level)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Models/Product.php</span>
+              <span class="tag tag-purple">Model Scope</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">scopeSearch() — Reusable Query Scope</div>
+                <div class="code-block"><code><span class="kw">public function</span> <span class="fn">scopeSearch</span>($query, $search)
+{
+    <span class="kw">return</span> $query
+        -><span class="fn">where</span>(<span class="str">'name'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>)
+        -><span class="fn">orWhere</span>(<span class="str">'series'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>)
+        -><span class="fn">orWhere</span>(<span class="str">'brand'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>)
+        -><span class="fn">orWhere</span>(<span class="str">'description'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>);
+}
+<span class="cmt">// Usage: Product::search('hirono')->get()</span></code></div>
+                <div class="explain-text"><strong>Local Query Scope</strong> — methods prefixed with <code>scope</code> become chainable methods on the model (called without the prefix: <code>->search()</code>). This encapsulates the LIKE search logic in the model, making it reusable across controllers. This is the "model search" implementation versus inline LIKE queries.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">LIKE Search (8pts level — ProductController)</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/ProductController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-blue">LIKE Query</span>
+            </div>
+            <div class="file-body">
+              <div class="code-block"><code>$query-><span class="fn">where</span>(<span class="kw">function</span>($q) use ($s) {
+    $q-><span class="fn">where</span>(<span class="str">'name'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>)
+      -><span class="fn">orWhere</span>(<span class="str">'series'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>)
+      -><span class="fn">orWhere</span>(<span class="str">'brand'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>)
+      -><span class="fn">orWhere</span>(<span class="str">'description'</span>, <span class="str">'like'</span>, <span class="str">"%{$s}%"</span>);
+});</code></div>
+              <div class="explain-text">Basic SQL LIKE search. The closure groups the OR conditions correctly — without the wrapping closure, additional <code>where()</code> calls after the OR block would be incorrectly joined, producing wrong results. The <code>%</code> wildcards match any characters before or after the search term.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TERM TEST -->
+  <!-- ============================================================ -->
+  <div id="term">
+    <div class="section-label">Term Test Lab — 30pts</div>
+    <div class="section-title">Transactions + Email Receipts + PDF <span class="badge">TERM TEST</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">TT</span>
+          <span class="mp-title">Checkout Transaction, Status Email, PDF Receipt Attachment</span>
+        </div>
+        <span class="mp-pts">30 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Checkout — DB Transaction + Confirmation Email</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/CheckoutController.php</span>
+              <span class="tag tag-green">Controller</span>
+              <span class="tag tag-red">Transaction</span>
+              <span class="tag tag-purple">Email</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">store() — Database Transaction</div>
+                <div class="code-block"><code>DB::<span class="fn">beginTransaction</span>();
+<span class="kw">try</span> {
+    <span class="cmt">// 1. Check stock</span>
+    <span class="kw">foreach</span> ($cartItems <span class="kw">as</span> $item) {
+        <span class="kw">if</span> ($item->product->stock_quantity < $item->quantity)
+            <span class="kw">throw new</span> Exception(<span class="str">'Insufficient stock...'</span>);
+    }
+    <span class="cmt">// 2. Create order</span>
+    $order = Order::<span class="fn">create</span>([...]);
+    <span class="cmt">// 3. Create order items + decrement stock</span>
+    <span class="kw">foreach</span> ($cartItems <span class="kw">as</span> $item) {
+        OrderItem::<span class="fn">create</span>([...]);
+        $item->product-><span class="fn">decrement</span>(<span class="str">'stock_quantity'</span>, $item->quantity);
+    }
+    auth()-><span class="fn">user</span>()->cartItems()-><span class="fn">delete</span>();
+    DB::<span class="fn">commit</span>();
+} <span class="kw">catch</span> (Exception $e) {
+    DB::<span class="fn">rollBack</span>();
+    <span class="kw">return</span> back()-><span class="fn">with</span>(<span class="str">'error'</span>, $e-><span class="fn">getMessage</span>());
+}</code></div>
+                <div class="explain-text"><strong>DB::beginTransaction()</strong> — wraps multiple database operations in an atomic unit. If any step fails (stock check, order creation, item creation), <strong>rollBack()</strong> undoes all changes, ensuring data integrity. Only on success does <strong>commit()</strong> finalize all changes. <strong>decrement()</strong> atomically reduces stock count. This prevents overselling.</div>
+              </div>
+              <div class="explain-item">
+                <div class="explain-label">Email After Transaction</div>
+                <div class="code-block"><code>Mail::<span class="fn">to</span>($order->user->email)-><span class="fn">send</span>(
+    <span class="kw">new</span> OrderReceiptMail($order-><span class="fn">fresh</span>([<span class="str">'orderItems.product'</span>, <span class="str">'user'</span>]))
+);</code></div>
+                <div class="explain-text"><strong>Mail::to()->send()</strong> — sends a Mailable class. <strong>$order->fresh()</strong> reloads the order from the database with eager-loaded relations, ensuring the email has current, complete order data. Wrapped in try-catch so a mail failure doesn't break the order confirmation page.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Admin Order Status Update + Email Notification</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/OrderController.php</span>
+              <span class="tag tag-red">Admin</span>
+              <span class="tag tag-purple">Status Email</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">update() — Status Change + Email</div>
+                <div class="code-block"><code>$oldStatus = $order->status;
+$order-><span class="fn">update</span>([<span class="str">'status'</span> => $request->status]);
+
+<span class="kw">if</span> ($oldStatus !== $request->status) {
+    Mail::<span class="fn">to</span>($order->user->email)-><span class="fn">send</span>(
+        <span class="kw">new</span> OrderStatusUpdatedMail(
+            $order-><span class="fn">fresh</span>([<span class="str">'orderItems.product'</span>, <span class="str">'user'</span>])
+        )
+    );
+}</code></div>
+                <div class="explain-text">The email is only sent when the status actually <em>changes</em> (compared using <code>!==</code>). This prevents redundant emails if admin saves the same status. The <strong>OrderStatusUpdatedMail</strong> Mailable formats an HTML email with the order details and new status.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">PDF Receipt Generation</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">app/Http/Controllers/Admin/ReportController.php → downloadPdf()</span>
+              <span class="tag tag-blue">DomPDF</span>
+              <span class="tag tag-purple">PDF Download</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">PDF Generation with DomPDF</div>
+                <div class="code-block"><code>$pdf = Pdf::<span class="fn">loadView</span>(<span class="str">'admin.reports.pdf'</span>, $data)
+    -><span class="fn">setPaper</span>(<span class="str">'a4'</span>, <span class="str">'portrait'</span>)
+    -><span class="fn">setOption</span>(<span class="str">'isRemoteEnabled'</span>, <span class="kw">true</span>)
+    -><span class="fn">setOption</span>(<span class="str">'defaultFont'</span>, <span class="str">'sans-serif'</span>);
+
+<span class="kw">return</span> $pdf-><span class="fn">download</span>($filename);</code></div>
+                <div class="explain-text"><strong>Pdf::loadView()</strong> — renders a Blade view as HTML and converts it to PDF using DomPDF. <strong>isRemoteEnabled: true</strong> — allows loading external images/fonts in the PDF (needed for QuickChart.io chart images). <strong>->download()</strong> streams the PDF as a file download response. The <strong>OrderReceiptMail</strong> uses the same pattern to attach a PDF to the order confirmation email.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- U1 -->
+  <!-- ============================================================ -->
+  <div id="u1">
+    <div class="section-label">U1 — 20pts</div>
+    <div class="section-title">Database Design / Migrations / Seeding <span class="badge">U1</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">U1</span>
+          <span class="mp-title">2NF Schema, Migration Scripts, Database Seeding</span>
+        </div>
+        <span class="mp-pts">20 pts</span>
+      </div>
+      <div class="mp-body">
+
+        <div class="sub-section">
+          <div class="sub-title">Migration Files</div>
+          <table class="mig-table">
+            <thead>
+              <tr>
+                <th>Migration File</th>
+                <th>Table</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="mig-name">0001_01_01_000000</span></td>
+                <td>users</td>
+                <td>Base user table (Laravel default: id, name, email, password, timestamps)</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000001</span></td>
+                <td>users (alter)</td>
+                <td>Adds ThePopStop fields: username, full_name, phone, address, profile_photo, role, is_active, email_verified_at</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000002</span></td>
+                <td>products</td>
+                <td>name, series, brand, price, cost_price, sku, description, character, stock_quantity, category, type, image_url, status, deleted_at (soft delete)</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000003</span></td>
+                <td>product_photos</td>
+                <td>product_id (FK), photo_url, is_primary, display_order — gallery images per product (1NF→2NF: separate from products table)</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000004</span></td>
+                <td>discounts</td>
+                <td>code, type, value, min_purchase, is_active, end_date — coupon/discount system</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000005</span></td>
+                <td>suppliers</td>
+                <td>name, contact_person, phone, email, address — vendor/supplier info</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000006</span></td>
+                <td>cart</td>
+                <td>user_id (FK), product_id (FK), quantity — shopping cart items</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000007</span></td>
+                <td>orders</td>
+                <td>user_id (FK), status, shipping_address, payment_method, discount_amount — order header</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000008</span></td>
+                <td>order_items</td>
+                <td>order_id (FK), product_id (FK), quantity, unit_price — line items (2NF: quantity+price not in orders table)</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000009</span></td>
+                <td>purchase_orders</td>
+                <td>supplier_id (FK), status, notes — purchase order from suppliers</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000010</span></td>
+                <td>purchase_order_items</td>
+                <td>purchase_order_id (FK), product_id (FK), quantity, unit_cost</td>
+              </tr>
+              <tr>
+                <td><span class="mig-name">2025_02_27_000011</span></td>
+                <td>reviews</td>
+                <td>product_id (FK), user_id (FK), order_id (FK), rating, review_text — product reviews linked to verified purchases</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">Database Seeders</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">database/seeders/</span>
+              <span class="tag tag-green">Seeders</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">DatabaseSeeder.php — Seeder Orchestration</div>
+                <div class="code-block"><code>$this-><span class="fn">call</span>([
+    AdminUserSeeder::class,   <span class="cmt">// default admin account</span>
+    UserSeeder::class,        <span class="cmt">// sample customer accounts</span>
+    ProductSeeder::class,     <span class="cmt">// sample products with photos</span>
+    SupplierSeeder::class,    <span class="cmt">// supplier records</span>
+    DiscountSeeder::class,    <span class="cmt">// discount codes</span>
+    OrderSeeder::class,       <span class="cmt">// sample orders + items</span>
+]);</code></div>
+                <div class="explain-text"><strong>DatabaseSeeder::call()</strong> runs each seeder class in the listed order. Order matters because of foreign key dependencies (users must exist before orders, products before order items, etc.). Run with <code>php artisan db:seed</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-title">2nd Normal Form Compliance</div>
+          <div class="file-entry">
+            <div class="file-header">
+              <span class="file-path">Schema Design</span>
+              <span class="tag tag-blue">2NF</span>
+            </div>
+            <div class="file-body">
+              <div class="explain-item">
+                <div class="explain-label">2NF Explanation</div>
+                <div class="explain-text">The schema meets 2NF: every non-key attribute depends on the <em>whole</em> primary key. Key examples: <strong>product_photos</strong> — photos are separated from products (a product can have many photos; storing them inline would violate 1NF). <strong>order_items</strong> — quantity and unit_price are in a separate table because they depend on BOTH order_id AND product_id, not just the order. <strong>reviews</strong> — linked to both user_id and product_id and order_id, ensuring no partial dependencies. All FK relationships are explicit and indexed.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MIDDLEWARE SUMMARY -->
+  <!-- ============================================================ -->
+  <div id="middleware">
+    <div class="section-label">Cross-Cutting Concern</div>
+    <div class="section-title">Middleware Summary <span class="badge">ALL MPs</span></div>
+
+    <div class="mp-card">
+      <div class="mp-header">
+        <div class="mp-header-left">
+          <span class="mp-num">MW</span>
+          <span class="mp-title">How Middleware Protects the Entire Application</span>
+        </div>
+      </div>
+      <div class="mp-body">
+        <div class="explain-item">
+          <div class="explain-label">'guest' middleware — Login / Register routes</div>
+          <div class="explain-text">Built-in Laravel middleware. Redirects already-authenticated users away from the login/register pages. Applied with <code>->middleware('guest')</code> on <code>/login</code> and <code>/register</code>.</div>
+        </div>
+        <div class="explain-item">
+          <div class="explain-label">'auth' middleware — Customer routes (cart, orders, profile, reviews)</div>
+          <div class="explain-text">Built-in. Redirects unauthenticated users to the login page. Applied to all routes that require being logged in.</div>
+        </div>
+        <div class="explain-item">
+          <div class="explain-label">'verified' middleware — All protected routes</div>
+          <div class="explain-text">Built-in. Works with the <code>MustVerifyEmail</code> interface. Redirects users with unverified email to the verification notice page. Ensures unverified users cannot use the shop.</div>
+        </div>
+        <div class="explain-item">
+          <div class="explain-label">'admin' middleware (EnsureUserIsAdmin) — All /admin/* routes</div>
+          <div class="explain-text">Custom middleware registered in <code>bootstrap/app.php</code>. Checks <code>$user->role === 'admin'</code>. Aborts with 403 if not admin. This is what separates the admin panel from the customer-facing site.</div>
+        </div>
+        <div class="explain-item">
+          <div class="explain-label">'throttle:6,1' middleware — Verification routes</div>
+          <div class="explain-text">Built-in rate limiting. Limits the email verification link to 6 attempts per 1 minute per IP. Prevents brute-force attacks against the verification endpoint.</div>
+        </div>
+        <div class="explain-item">
+          <div class="explain-label">'signed' middleware — Verification link</div>
+          <div class="explain-text">Built-in. Validates that the URL contains a valid cryptographic signature generated by Laravel. Prevents attackers from manually crafting verification URLs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  ThePopStop — ITCP226 Code Mapping Document &nbsp;|&nbsp; Laravel 12 &nbsp;|&nbsp; PHP 8.2 &nbsp;|&nbsp; Generated for academic reference
+</div>
+
+</body>
+</html>
