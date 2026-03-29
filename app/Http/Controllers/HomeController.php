@@ -13,7 +13,7 @@ class HomeController extends Controller
         $brand = $request->get('brand', '');
 
         if ($search !== '') {
-            // Method 1: Laravel Scout Search (with result pagination)
+            // Laravel Scout Search (with result pagination)
             $products = Product::search($search)
                 ->query(function ($query) use ($brand) {
                     $query->where('status', '!=', 'Out of Stock');

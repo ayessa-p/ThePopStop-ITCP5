@@ -23,8 +23,7 @@ class UserSeeder extends Seeder
     'full_name' => 'Administrator',
     'email' => 'admin@thepopstop.com',
     'phone' => NULL,
-    'address' => '969 Cummerata Groves
-Port Ericka, FL 89992',
+    'address' => 'Taguig City',
     'profile_photo' => NULL,
     'role' => 'admin',
     'is_active' => true,

@@ -81,7 +81,7 @@ class ReviewController extends Controller
 
     protected function filterBadWords(string $text): string
     {
-        $words = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'putangina', 'gago', 'tangina', 'bobo'];
+        $words = ['damn', 'fuck', 'shit', 'hell', 'crap', 'stupid', 'idiot', 'putangina', 'gago', 'tangina', 'bobo'];
         foreach ($words as $word) {
             $text = preg_replace('/\b' . preg_quote($word, '/') . '\b/i', str_repeat('*', strlen($word)), $text);
         }
